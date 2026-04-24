@@ -30,9 +30,10 @@ export async function GET() {
 
   const raw: Record<string, unknown>[] = await res.json()
 
-  const markets = raw.map(normaliseMarket).filter((m) => m != null);
+  const markets = raw
+    .map(normaliseMarket)
+    .filter((m) => m != null)
+    .map((market) => ({ ...market, signals: runRules(market) }))
 
-  const signals = runRules(markets)
-
-  return NextResponse.json({ markets, signals })
+  return NextResponse.json({ markets })
 }

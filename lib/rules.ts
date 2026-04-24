@@ -1,40 +1,4 @@
-import type { Market } from './normalise'
-
-/**
- * An alert produced when a market satisfies a rule.
- *
- * Signals are created by {@link Rule} functions and collected by
- * {@link runRules}. Each signal is scoped to a single market and carries
- * enough information to render an actionable notification.
- */
-export type Signal = {
-  /** The ID of the market that triggered this signal. */
-  marketId: string
-  /**
-   * Machine-readable rule identifier, e.g. `'significant_price_move'`.
-   * Stable across runs; safe to use as a key in UI or analytics.
-   */
-  rule: string
-  /** Human-readable explanation of why the signal fired. */
-  description: string
-  /**
-   * How noteworthy the signal is.
-   * - `'low'` — informational; no immediate action required.
-   * - `'medium'` — notable change worth monitoring.
-   * - `'high'` — significant event that likely warrants attention.
-   */
-  severity: 'low' | 'medium' | 'high'
-}
-
-/**
- * A rule function that evaluates one market and optionally produces a
- * {@link Signal}.
- *
- * @param market - The normalised market to evaluate.
- * @returns A {@link Signal} if the rule condition is met, or `null` if it is
- * not.
- */
-type Rule = (market: Market) => Signal | null
+import type { Market, Rule, Signal } from './types'
 
 /**
  * Fires when the absolute 24-hour price change is at least 10%.
@@ -147,15 +111,11 @@ const RULES: Rule[] = [
 ]
 
 /**
- * Evaluates all registered {@link RULES} against every market in the provided
- * list and returns the combined set of signals that fired.
+ * Evaluates all registered {@link RULES} against a single market.
  *
- * @param markets - The normalised markets to analyse.
- * @returns An array of {@link Signal} objects, one per (market, rule) pair
- * where the rule condition was satisfied. Empty if no rules fire.
+ * @param market - The normalised market to analyse.
+ * @returns An array of {@link Signal} objects for each rule that fired. Empty if none fire.
  */
-export function runRules(markets: Market[]): Signal[] {
-  return markets.flatMap(market =>
-    RULES.map(rule => rule(market)).filter((s) => s != null)
-  )
+export function runRules(market: Market): Signal[] {
+  return RULES.map(rule => rule(market)).filter((s) => s != null)
 }

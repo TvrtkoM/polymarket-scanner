@@ -1,31 +1,15 @@
+import type { Market, Outcome } from './types'
 
-export type Outcome = {
-  label: string
-  price: number
-}
-
-export type Market = {
-  id: string
-  question: string
-  slug: string
-  outcomes: Outcome[]
-  volume24h: number
-  volume1wk: number
-  liquidity: number
-  endDate: Date | null
-  active: boolean
-  acceptingOrders: boolean
-  lastTradePrice: number
-  bestBid: number
-  bestAsk: number
-  spread: number
-  oneDayPriceChange: number
-  oneWeekPriceChange: number
-  eventTitle: string | null
-  eventId: string | null
-  image: string | null
-}
-
+/**
+ * Converts a raw Polymarket API market object into a typed {@link Market},
+ * applying eligibility filters and parsing nested JSON fields.
+ *
+ * Returns `null` for markets that are inactive, closed, archived, not accepting
+ * orders, have less than $1,000 liquidity, or contain malformed outcome data.
+ *
+ * @param raw - An untyped market object from the Polymarket REST API.
+ * @returns A normalised {@link Market}, or `null` if the market should be skipped.
+ */
 export function normaliseMarket(raw: Record<string, unknown>): Market | null {
   // drop markets we don't care about
   if (!raw.active || raw.closed || raw.archived) return null

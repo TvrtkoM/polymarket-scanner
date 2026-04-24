@@ -12,7 +12,7 @@ const params = new URLSearchParams({
   liquidity_num_min: '1000',
   order: 'volume24hrClob',
   ascending: 'false',
-  limit: '20',
+  limit: '18',
 })
 
 export async function GET() {

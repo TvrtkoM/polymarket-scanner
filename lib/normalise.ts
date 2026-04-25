@@ -50,6 +50,7 @@ export function normaliseMarket(raw: Record<string, unknown>): Market | null {
     oneWeekPriceChange: (raw.oneWeekPriceChange as number) ?? 0,
     eventTitle: events?.[0]?.title as string ?? null,
     eventId: events?.[0]?.id as string ?? null,
+    eventSlug: events?.[0]?.slug as string ?? null,
     image: (raw.image as string) ?? null,
   }
 }

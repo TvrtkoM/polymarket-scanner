@@ -44,6 +44,8 @@ export type Market = {
   eventTitle: string | null
   /** ID of the parent event, or `null` if none. */
   eventId: string | null
+  /** URL slug of the parent event, or `null` if none. */
+  eventSlug: string | null
   /** URL of the market's cover image, or `null` if none. */
   image: string | null
 }

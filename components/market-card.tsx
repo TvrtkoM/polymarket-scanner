@@ -1,6 +1,10 @@
+"use client";
+
 import type { MarketWithSignals } from "@/lib/types";
 import { formatCurrency, formatSignedPercent } from "@/lib/utils";
 import Image from "next/image";
+import React from "react";
+import { HorizontalScroller } from "./ui/horizontal-scroller";
 
 export function MarketCard({
   market,
@@ -58,27 +62,54 @@ export function MarketCard({
           <span>Liq: {formatCurrency(market.liquidity)}</span>
         </div>
 
-        {market.signals.length > 0 ? (
-          <ul className="flex flex-wrap gap-1 pt-1">
-            {market.signals.map((s) => (
-              <li
-                key={s.rule}
-                title={s.description}
-                className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                  s.severity === "high"
-                    ? "bg-red-100 text-red-700"
-                    : s.severity === "medium"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-blue-100 text-blue-700"
-                }`}
-              >
-                {s.rule}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="py-0.5 text-xs font-medium">No signals</div>
-        )}
+        <div className="flex items-center gap-2 pt-1">
+          <div className="flex-1 min-w-0">
+            {market.signals.length > 0 ? (
+              <HorizontalScroller>
+                {(ref) => (
+                  <ul
+                    ref={ref as React.RefObject<HTMLUListElement>}
+                    className="flex gap-1 overflow-x-auto scrollbar-none flex-1 min-w-0"
+                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  >
+                    {market.signals.map((s) => (
+                      <li
+                        key={s.rule}
+                        title={s.description}
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
+                          s.severity === "high"
+                            ? "bg-red-100 text-red-700"
+                            : s.severity === "medium"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-blue-100 text-blue-700"
+                        }`}
+                      >
+                        {s.rule}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </HorizontalScroller>
+            ) : (
+              <div className="py-0.5 text-xs font-medium">No signals</div>
+            )}
+          </div>
+
+          <a
+            href={`https://polymarket.com/event/${market.eventSlug ?? market.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+            aria-label="Open on Polymarket"
+          >
+            <Image
+              src="https://www.polymarket.com/favicon.ico"
+              alt="Polymarket"
+              width={16}
+              height={16}
+            />
+          </a>
+        </div>
       </div>
     </article>
   );

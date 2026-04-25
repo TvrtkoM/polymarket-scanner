@@ -35,6 +35,13 @@ export async function apiFetch<T>(
   return res.json() as Promise<T>
 }
 
+/**
+ * Fetches a paginated list of markets with their associated signals.
+ *
+ * @param page - Zero-based page index to retrieve.
+ * @defaultValue page `0`
+ * @returns An object containing the markets for the requested page and whether more pages exist.
+ */
 export async function fetchMarkets(page = 0) {
   return apiFetch<{ markets: MarketWithSignals[]; hasNextPage: boolean }>(`/api/markets?page=${page}`);
 }

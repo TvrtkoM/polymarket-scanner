@@ -7,6 +7,17 @@ import type { MarketWithSignals } from './types'
 
 const GAMMA_URL = 'https://gamma-api.polymarket.com'
 
+/**
+ * Fetches a paginated list of active, tradeable markets from the Polymarket API,
+ * normalises each entry, and attaches computed trading signals.
+ *
+ * Results are cached by Next.js and revalidated every 60 seconds.
+ *
+ * @param page - Zero-based page index to retrieve.
+ * @defaultValue page `0`
+ * @returns An object containing the normalised {@link MarketWithSignals} array for the requested page and whether more pages exist.
+ * @throws `Error` When the Polymarket API responds with a non-2xx status.
+ */
 export async function getMarkets(page = 0): Promise<{ markets: MarketWithSignals[]; hasNextPage: boolean }> {
   const params = new URLSearchParams({
     active: 'true',

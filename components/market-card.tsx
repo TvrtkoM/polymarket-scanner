@@ -41,8 +41,10 @@ export function MarketCard({
         </p>
 
         {prob !== null && (
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold">{prob}%</span>
+          <div className="flex items-baseline gap-2 mt-auto">
+            <span className="text-2xl font-bold">
+              {leadOutcome.label} {prob}%
+            </span>
             <span
               className={`text-xs font-medium ${changePositive ? "text-green-600" : "text-red-500"}`}
             >
@@ -51,7 +53,7 @@ export function MarketCard({
           </div>
         )}
 
-        <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <span>Vol 24h: {formatCurrency(market.volume24h)}</span>
           <span>Liq: {formatCurrency(market.liquidity)}</span>
         </div>

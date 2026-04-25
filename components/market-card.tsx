@@ -56,7 +56,7 @@ export function MarketCard({
           <span>Liq: {formatCurrency(market.liquidity)}</span>
         </div>
 
-        {market.signals.length > 0 && (
+        {market.signals.length > 0 ? (
           <ul className="flex flex-wrap gap-1 pt-1">
             {market.signals.map((s) => (
               <li
@@ -74,6 +74,8 @@ export function MarketCard({
               </li>
             ))}
           </ul>
+        ) : (
+          <div className="py-0.5 text-xs font-medium">No signals</div>
         )}
       </div>
     </article>

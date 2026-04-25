@@ -1,39 +1,12 @@
-import { normaliseMarket } from '@/lib/normalise'
-import { runRules } from '@/lib/rules'
+import { getMarkets } from '@/lib/markets'
 import { NextResponse } from 'next/server'
 
-const GAMMA_URL = 'https://gamma-api.polymarket.com'
-
-const params = new URLSearchParams({
-  active: 'true',
-  closed: 'false',
-  archived: 'false',
-  accepting_orders: 'true',
-  liquidity_num_min: '1000',
-  order: 'volume24hrClob',
-  ascending: 'false',
-  limit: '18',
-})
-
 export async function GET() {
-  const res = await fetch(
-    `${GAMMA_URL}/markets?${params}`,
-    { next: { revalidate: 60 } }
-  )
-
-  if (!res.ok) {
-    return NextResponse.json(
-      { error: 'Failed to fetch from Polymarket' },
-      { status: res.status }
-    )
+  try {
+    const data = await getMarkets()
+    return NextResponse.json(data)
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Failed to fetch from Polymarket'
+    return NextResponse.json({ error: message }, { status: 502 })
   }
-
-  const raw: Record<string, unknown>[] = await res.json()
-
-  const markets = raw
-    .map(normaliseMarket)
-    .filter((m) => m != null)
-    .map((market) => ({ ...market, signals: runRules(market) }))
-
-  return NextResponse.json({ markets })
 }

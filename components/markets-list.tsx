@@ -1,16 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { apiFetch } from "@/lib/api";
-import type { MarketWithSignals } from "@/lib/types";
+import { fetchMarkets } from "@/lib/client-api";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { MarketCard } from "./market-card";
 
-type MarketsResponse = { markets: MarketWithSignals[] };
-
 export function MarketsList() {
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isPending, isError, error } = useSuspenseQuery({
     queryKey: ["markets"],
-    queryFn: () => apiFetch<MarketsResponse>("/api/markets")
+    queryFn: () => fetchMarkets()
   });
 
   if (isPending) {

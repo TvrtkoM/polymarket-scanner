@@ -1,5 +1,5 @@
 import { defaultShouldDehydrateQuery, environmentManager, QueryClient } from '@tanstack/react-query'
-import { ApiError } from './api'
+import { ApiError } from './client-api'
 
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504])
 

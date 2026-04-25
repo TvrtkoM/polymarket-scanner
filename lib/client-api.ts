@@ -35,6 +35,6 @@ export async function apiFetch<T>(
   return res.json() as Promise<T>
 }
 
-export async function fetchMarkets() {
-  return apiFetch<{ markets: MarketWithSignals[] }>('/api/markets');
+export async function fetchMarkets(page = 0) {
+  return apiFetch<{ markets: MarketWithSignals[]; hasNextPage: boolean }>(`/api/markets?page=${page}`);
 }

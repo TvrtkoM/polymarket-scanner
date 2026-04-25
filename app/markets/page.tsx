@@ -8,9 +8,10 @@ export const metadata = { title: "Markets" };
 async function Markets() {
   const queryClient = getQueryClient();
 
-  queryClient.prefetchQuery({
+  queryClient.prefetchInfiniteQuery({
     queryKey: ["markets"],
-    queryFn: () => getMarkets()
+    queryFn: () => getMarkets(0),
+    initialPageParam: 0,
   });
 
   return (

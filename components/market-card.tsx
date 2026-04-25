@@ -1,22 +1,42 @@
-import type { MarketWithSignals } from '@/lib/types'
-import Image from 'next/image'
+import type { MarketWithSignals } from "@/lib/types";
+import Image from "next/image";
 
-function fmt(n: number, decimals = 0) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`
-  return `$${n.toFixed(decimals)}`
+/**
+ * Formats a dollar amount into a compact, human-readable string with K/M suffixes.
+ *
+ * @param amount - The raw dollar value to format.
+ * @param decimals - Decimal places to show when no suffix applies.
+ * @defaultValue decimals `0`
+ * @returns A prefixed string such as `$1.2M`, `$430K`, or `$99`.
+ */
+function formatCurrency(amount: number, decimals = 0) {
+  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`;
+  if (amount >= 1_000) return `$${(amount / 1_000).toFixed(0)}K`;
+  return `$${amount.toFixed(decimals)}`;
 }
 
-function pct(n: number) {
-  const sign = n >= 0 ? '+' : ''
-  return `${sign}${(n * 100).toFixed(1)}%`
+/**
+ * Formats a decimal fraction as a signed percentage string.
+ *
+ * @param fraction - A value in [−1, 1] representing the change (e.g. `0.05` for 5%).
+ * @returns A string such as `+5.0%` or `-2.3%`.
+ */
+function formatSignedPercent(fraction: number) {
+  const sign = fraction >= 0 ? "+" : "";
+  return `${sign}${(fraction * 100).toFixed(1)}%`;
 }
 
-export function MarketCard({ market }: { market: MarketWithSignals }) {
-  const leadOutcome = market.outcomes[0]
-  const prob = leadOutcome ? Math.round(leadOutcome.price * 100) : null
-  const change = market.oneDayPriceChange
-  const changePositive = change >= 0
+export function MarketCard({
+  market,
+  imagePriority = false
+}: {
+  market: MarketWithSignals;
+  imagePriority?: boolean;
+}) {
+  const leadOutcome = market.outcomes[0];
+  const prob = leadOutcome ? Math.round(leadOutcome.price * 100) : null;
+  const change = market.oneDayPriceChange;
+  const changePositive = change >= 0;
 
   return (
     <article className="flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow">
@@ -27,7 +47,8 @@ export function MarketCard({ market }: { market: MarketWithSignals }) {
             alt=""
             fill
             className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 640px) 570px, (max-width: 1024px) 470px, 380px"
+            priority={imagePriority}
           />
         </div>
       )}
@@ -47,16 +68,16 @@ export function MarketCard({ market }: { market: MarketWithSignals }) {
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold">{prob}%</span>
             <span
-              className={`text-xs font-medium ${changePositive ? 'text-green-600' : 'text-red-500'}`}
+              className={`text-xs font-medium ${changePositive ? "text-green-600" : "text-red-500"}`}
             >
-              {pct(change)} 24h
+              {formatSignedPercent(change)} 24h
             </span>
           </div>
         )}
 
         <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-          <span>Vol 24h: {fmt(market.volume24h)}</span>
-          <span>Liq: {fmt(market.liquidity)}</span>
+          <span>Vol 24h: {formatCurrency(market.volume24h)}</span>
+          <span>Liq: {formatCurrency(market.liquidity)}</span>
         </div>
 
         {market.signals.length > 0 && (
@@ -66,11 +87,11 @@ export function MarketCard({ market }: { market: MarketWithSignals }) {
                 key={s.rule}
                 title={s.description}
                 className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                  s.severity === 'high'
-                    ? 'bg-red-100 text-red-700'
-                    : s.severity === 'medium'
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-blue-100 text-blue-700'
+                  s.severity === "high"
+                    ? "bg-red-100 text-red-700"
+                    : s.severity === "medium"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-blue-100 text-blue-700"
                 }`}
               >
                 {s.rule}
@@ -80,5 +101,5 @@ export function MarketCard({ market }: { market: MarketWithSignals }) {
         )}
       </div>
     </article>
-  )
+  );
 }

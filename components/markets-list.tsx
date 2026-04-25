@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import { useQuery } from '@tanstack/react-query'
-import { apiFetch } from '@/lib/api'
-import type { MarketWithSignals } from '@/lib/types'
-import { MarketCard } from './market-card'
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api";
+import type { MarketWithSignals } from "@/lib/types";
+import { MarketCard } from "./market-card";
 
-type MarketsResponse = { markets: MarketWithSignals[] }
+type MarketsResponse = { markets: MarketWithSignals[] };
 
 export function MarketsList() {
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ['markets'],
-    queryFn: () => apiFetch<MarketsResponse>('/api/markets'),
-  })
+    queryKey: ["markets"],
+    queryFn: () => apiFetch<MarketsResponse>("/api/markets")
+  });
 
   if (isPending) {
     return (
@@ -23,7 +23,7 @@ export function MarketsList() {
           />
         ))}
       </div>
-    )
+    );
   }
 
   if (isError) {
@@ -31,20 +31,20 @@ export function MarketsList() {
       <div className="rounded-2xl border border-destructive/40 bg-destructive/10 p-6 text-destructive text-sm">
         Failed to load markets: {error.message}
       </div>
-    )
+    );
   }
 
-  const markets = data.markets
+  const markets = data.markets;
 
   if (markets.length === 0) {
-    return <p className="text-muted-foreground text-sm">No markets found.</p>
+    return <p className="text-muted-foreground text-sm">No markets found.</p>;
   }
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {markets.map((market) => (
-        <MarketCard key={market.id} market={market} />
+      {markets.map((market, i) => (
+        <MarketCard key={market.id} market={market} imagePriority={i < 6} />
       ))}
     </div>
-  )
+  );
 }

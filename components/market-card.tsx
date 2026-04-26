@@ -103,10 +103,10 @@ export function MarketCard({
             aria-label="Open on Polymarket"
           >
             <Image
-              src="https://www.polymarket.com/favicon.ico"
+              src="https://polymarket.com/icons/favicon-32x32.png"
               alt="Polymarket"
-              width={16}
-              height={16}
+              height={20}
+              width={20}
             />
           </a>
         </div>

@@ -41,7 +41,7 @@ export function MarketCard({
           </p>
         )}
 
-        <p className="text-sm font-semibold leading-snug line-clamp-3">
+        <p className="text-sm font-semibold leading-snug line-clamp-2 underline">
           <Link href={`/markets/${market.slug}`} prefetch>
             {market.question}
           </Link>

@@ -15,10 +15,10 @@ function makeQueryClient() {
       },
       queries: {
         staleTime: 60_000,
+        retryDelay: 3000,
         retry: (failureCount, error) => {
-          if (failureCount >= 3) return false
           if (error instanceof ApiError) {
-            return RETRYABLE_STATUS_CODES.has(error.statusCode)
+            return RETRYABLE_STATUS_CODES.has(error.statusCode) && failureCount < 2
           }
           return false
         },

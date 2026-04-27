@@ -6,6 +6,7 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { MarketCard } from "./market-card";
+import { ErrorComponent } from "./error";
 
 function getColCount() {
   if (window.matchMedia("(min-width: 1024px)").matches) return 3;
@@ -34,6 +35,7 @@ type VirtualListProps = {
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  error: Error | null;
 };
 
 function MarketsVirtualList({
@@ -41,7 +43,8 @@ function MarketsVirtualList({
   cols,
   fetchNextPage,
   hasNextPage,
-  isFetchingNextPage
+  isFetchingNextPage,
+  error
 }: VirtualListProps) {
   const rowCount = Math.ceil(markets.length / cols);
 
@@ -62,52 +65,67 @@ function MarketsVirtualList({
 
   useEffect(() => {
     const lastRow = virtualRows.at(-1);
-    if (!lastRow) return;
+    if (!lastRow || error) return;
     if (lastRow.index >= rowCount - 1 && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [virtualRows, rowCount, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [
+    virtualRows,
+    rowCount,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    error
+  ]);
 
   return (
-    <div
-      ref={listRef}
-      style={{ height: virtualizer.getTotalSize(), position: "relative" }}
-    >
-      {virtualRows.map((virtualRow) => {
-        const startIdx = virtualRow.index * cols;
-        const rowMarkets = markets.slice(startIdx, startIdx + cols);
+    <>
+      <div
+        ref={listRef}
+        style={{ height: virtualizer.getTotalSize(), position: "relative" }}
+      >
+        {virtualRows.map((virtualRow) => {
+          const startIdx = virtualRow.index * cols;
+          const rowMarkets = markets.slice(startIdx, startIdx + cols);
 
-        return (
-          <div
-            key={virtualRow.key}
-            data-index={virtualRow.index}
-            ref={virtualizer.measureElement}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              transform: `translateY(${virtualRow.start - scrollMargin}px)`
-            }}
-          >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 pb-4">
-              {rowMarkets.map((market, i) => (
-                <MarketCard
-                  key={market.id}
-                  market={market}
-                  imagePriority={virtualRow.index === 0 && i < cols}
-                />
-              ))}
+          return (
+            <div
+              key={virtualRow.key}
+              data-index={virtualRow.index}
+              ref={virtualizer.measureElement}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                transform: `translateY(${virtualRow.start - scrollMargin}px)`
+              }}
+            >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 pb-4">
+                {rowMarkets.map((market, i) => (
+                  <MarketCard
+                    key={market.id}
+                    market={market}
+                    imagePriority={virtualRow.index === 0 && i < cols}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+      {isFetchingNextPage && !error && (
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Loading more…
+        </p>
+      )}
+      {error && <ErrorComponent error={error} onRetry={fetchNextPage} />}
+    </>
   );
 }
 
 export function MarketsList() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, error, isFetchingNextPage } =
     useSuspenseInfiniteQuery({
       queryKey: ["markets"],
       queryFn: ({ pageParam }) => fetchMarkets(pageParam),
@@ -148,12 +166,8 @@ export function MarketsList() {
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
+        error={error}
       />
-      {isFetchingNextPage && (
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          Loading more…
-        </p>
-      )}
     </>
   );
 }

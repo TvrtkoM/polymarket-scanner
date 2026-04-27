@@ -53,6 +53,16 @@ export async function getMarkets(page = 0): Promise<{ markets: MarketWithSignals
 }
 
 
+/**
+ * Fetches a single market by its slug from the Polymarket API,
+ * normalises it, and attaches computed trading signals.
+ *
+ * Results are cached by Next.js and revalidated every 60 seconds.
+ *
+ * @param slug - The URL slug that uniquely identifies the market.
+ * @returns An object containing the normalised {@link MarketWithSignals}, or `null` if the slug does not match a valid market.
+ * @throws `Error` When the Polymarket API responds with a non-2xx status.
+ */
 export async function getMarket(slug: string): Promise<{ market: MarketWithSignals } | null> {
   const res = await fetch(`${GAMMA_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
 

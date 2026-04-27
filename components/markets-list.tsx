@@ -63,20 +63,17 @@ function MarketsVirtualList({
 
   const virtualRows = virtualizer.getVirtualItems();
 
+  const lastRow = virtualRows.at(-1);
+  const shouldFetch =
+    lastRow != null &&
+    !error &&
+    lastRow.index >= rowCount - 1 &&
+    hasNextPage &&
+    !isFetchingNextPage;
+
   useEffect(() => {
-    const lastRow = virtualRows.at(-1);
-    if (!lastRow || error) return;
-    if (lastRow.index >= rowCount - 1 && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [
-    virtualRows,
-    rowCount,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    error
-  ]);
+    if (shouldFetch) fetchNextPage();
+  }, [shouldFetch, fetchNextPage]);
 
   return (
     <>

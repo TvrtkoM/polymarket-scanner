@@ -1,5 +1,5 @@
 import { MarketDetails } from "@/components/market-details";
-import { getMarket } from "@/lib/markets";
+import { getMarket } from "@/lib/markets/get-markets";
 import { getQueryClient } from "@/lib/query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 

@@ -1,12 +1,12 @@
 "use client";
 
 import { fetchMarkets } from "@/lib/client-api";
-import type { MarketWithSignals } from "@/lib/types";
+import type { MarketWithSignals } from "@/lib/markets/types";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
-import { MarketCard } from "./market-card";
 import { ErrorComponent } from "./error";
+import { MarketCard } from "./market-card";
 
 function getColCount() {
   if (window.matchMedia("(min-width: 1024px)").matches) return 3;

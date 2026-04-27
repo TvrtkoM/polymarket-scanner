@@ -1,7 +1,5 @@
-import { defaultShouldDehydrateQuery, environmentManager, QueryClient } from '@tanstack/react-query'
-import { ApiError } from './api-error';
-
-const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504])
+import { defaultShouldDehydrateQuery, environmentManager, QueryClient } from '@tanstack/react-query';
+import { isRetryable } from './errors';
 
 let browserQueryClient: QueryClient | null = null;
 
@@ -17,10 +15,7 @@ function makeQueryClient() {
         staleTime: 60_000,
         retryDelay: 3000,
         retry: (failureCount, error) => {
-          if (error instanceof ApiError) {
-            return RETRYABLE_STATUS_CODES.has(error.statusCode) && failureCount < 2
-          }
-          return false
+          return isRetryable(error) && failureCount <= 2
         },
       },
     },

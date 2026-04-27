@@ -1,4 +1,4 @@
-import type { Market, Outcome } from './types'
+import type { Market, Outcome } from "./types"
 
 /**
  * Converts a raw Polymarket API market object into a typed {@link Market},

@@ -1,5 +1,5 @@
-import { ApiError } from '@/lib/api-error'
-import { getMarkets } from '@/lib/markets'
+import { ApiError } from '@/lib/errors'
+import { getMarkets } from '@/lib/markets/get-markets'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {

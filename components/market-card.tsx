@@ -1,11 +1,11 @@
 "use client";
 
-import type { MarketWithSignals } from "@/lib/types";
+import type { MarketWithSignals } from "@/lib/markets/types";
 import { formatCurrency, formatSignedPercent } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { HorizontalScroller } from "./ui/horizontal-scroller";
-import Link from "next/link";
 
 export function MarketCard({
   market,

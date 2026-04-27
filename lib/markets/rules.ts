@@ -1,4 +1,4 @@
-import type { Market, Rule, Signal } from './types'
+import type { Market, Rule, Signal } from "./types"
 
 /**
  * Fires when the absolute 24-hour price change is at least 10%.

@@ -1,3 +1,4 @@
+
 /** A single tradeable outcome within a {@link Market}. */
 export type Outcome = {
   /** Display label shown to traders (e.g. `"Yes"`, `"No"`, `"Biden"`). */

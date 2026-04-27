@@ -1,12 +1,9 @@
-
-import 'server-only'
-import { marketsPageCount } from './constants'
-import { normaliseMarket } from './normalise'
-import { runRules } from './rules'
-import type { MarketWithSignals } from './types'
-import { ApiError } from './api-error'
-
-const GAMMA_URL = 'https://gamma-api.polymarket.com'
+import "server-only";
+import { ApiError } from "../errors";
+import { normaliseMarket } from "./normalise";
+import { runRules } from "./rules";
+import { GAMMA_URL, marketsPageCount } from "./constants";
+import type { MarketWithSignals } from "./types";
 
 /**
  * Fetches a paginated list of active, tradeable markets from the Polymarket API,

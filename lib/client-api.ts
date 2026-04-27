@@ -1,5 +1,5 @@
-import { ApiError } from "./api-error";
-import { MarketWithSignals } from "./types"
+import { ApiError } from "./errors";
+import type { MarketWithSignals } from "./markets/types";
 
 /**
  * Fetches a JSON resource and returns it typed as `T`.

@@ -70,6 +70,8 @@ export async function getMarket(slug: string): Promise<{ market: MarketWithSigna
 
   const raw: Record<string, unknown> = await res.json();
 
+  console.log(raw)
+
   const market = normaliseMarket(raw);
 
   if (!market) {

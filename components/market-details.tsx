@@ -91,7 +91,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
             {market.eventTitle}
           </p>
         )}
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           {market.image && (
             <div className="w-12 h-12 relative">
               <Image
@@ -107,7 +107,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           <h1 className="text-2xl font-bold tracking-tight flex-1">
             {market.question}
           </h1>
-          <PolymarketsLink slug={market.slug} />
+          <PolymarketsLink slug={market.slug} className="self-start" />
         </div>
       </div>
 

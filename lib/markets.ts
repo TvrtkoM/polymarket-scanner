@@ -4,6 +4,7 @@ import { marketsPageCount } from './constants'
 import { normaliseMarket } from './normalise'
 import { runRules } from './rules'
 import type { MarketWithSignals } from './types'
+import { ApiError } from './api-error'
 
 const GAMMA_URL = 'https://gamma-api.polymarket.com'
 
@@ -37,7 +38,7 @@ export async function getMarkets(page = 0): Promise<{ markets: MarketWithSignals
   )
 
   if (!res.ok) {
-    throw new Error(`Polymarket API error: ${res.status}`)
+    throw new ApiError(`Polymarket API error`, res.status)
   }
 
   const raw: Record<string, unknown>[] = await res.json()
@@ -67,7 +68,7 @@ export async function getMarket(slug: string): Promise<{ market: MarketWithSigna
   const res = await fetch(`${GAMMA_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
 
   if (!res.ok) {
-    throw new Error(`Polymarket API error: ${res.status}`)
+    throw new ApiError(`Polymarket API error`, res.status)
   }
 
   const raw: Record<string, unknown> = await res.json();

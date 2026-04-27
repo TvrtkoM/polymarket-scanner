@@ -51,3 +51,18 @@ export async function getMarkets(page = 0): Promise<{ markets: MarketWithSignals
 
   return { markets, hasNextPage }
 }
+
+
+export async function getMarket(slug: string): Promise<{ market: MarketWithSignals } | null> {
+  const res = await fetch(`${GAMMA_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
+
+  if (!res.ok) {
+    throw new Error(`Polymarket API error: ${res.status}`)
+  }
+
+  const raw: Record<string, unknown> = await res.json();
+
+  const market = normaliseMarket(raw);
+
+  return market && { market: { ...market, signals: runRules(market) } };
+}

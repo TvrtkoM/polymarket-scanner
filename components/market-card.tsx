@@ -5,6 +5,7 @@ import { formatCurrency, formatSignedPercent } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 import { HorizontalScroller } from "./ui/horizontal-scroller";
+import Link from "next/link";
 
 export function MarketCard({
   market,
@@ -41,7 +42,7 @@ export function MarketCard({
         )}
 
         <p className="text-sm font-semibold leading-snug line-clamp-3">
-          {market.question}
+          <Link href={`/markets/${market.slug}`}>{market.question}</Link>
         </p>
 
         {prob !== null && (

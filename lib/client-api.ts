@@ -44,3 +44,7 @@ export async function apiFetch<T>(
 export async function fetchMarkets(page = 0) {
   return apiFetch<{ markets: MarketWithSignals[]; hasNextPage: boolean }>(`/api/markets?page=${page}`);
 }
+
+export async function fetchMarket(slug: string) {
+  return apiFetch<{ market: MarketWithSignals }>(`/api/market?slug=${slug}`)
+}

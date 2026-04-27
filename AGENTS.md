@@ -21,6 +21,7 @@ Goal is to add more functionality to the app to improve decision making before m
 - **Shadcn with RadixUI** for implementing user interface
 - **Tailwind** for UI styling
 - **Jotai** for state management
+- **Lucide react** icon library
 
 ## Project structure
 
@@ -31,6 +32,7 @@ Goal is to add more functionality to the app to improve decision making before m
 ## Development
 
 - **strict _typescript_**: _unknown_ should be preferred to _any_, but generally everything should be typed
+- **icons**: use icons from lucide-react library, avoid inline svg
 
 <!-- BEGIN:nextjs-agent-rules -->
 

@@ -17,7 +17,7 @@ export async function apiFetch<T>(
   const res = await fetch(input, init)
 
   if (!res.ok) {
-    throw new ApiError(`Fetch error - ${res.statusText}`, res.status)
+    throw new ApiError(`${(await res.json()).error} - ${res.statusText}`, res.status)
   }
 
   return res.json() as Promise<T>

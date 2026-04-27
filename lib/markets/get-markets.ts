@@ -72,5 +72,9 @@ export async function getMarket(slug: string): Promise<{ market: MarketWithSigna
 
   const market = normaliseMarket(raw);
 
-  return market && { market: { ...market, signals: runRules(market) } };
+  if (!market) {
+    throw new ApiError(`Market not found`, 404)
+  }
+
+  return { market: { ...market, signals: runRules(market) } };
 }

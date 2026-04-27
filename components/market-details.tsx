@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { fetchMarket } from "@/lib/client-api";
-import { cn, formatCurrency } from "@/lib/utils";
 import type { MarketWithSignals, Signal } from "@/lib/markets/types";
+import { cn, formatCurrency, formatDate } from "@/lib/utils";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import Image from "next/image";
+import { PolymarketsLink } from "./ui/polymarkets-link";
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -92,43 +93,31 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         )}
         <div className="flex items-start gap-3">
           {market.image && (
-            <Image
-              src={market.image}
-              alt=""
-              width={48}
-              height={48}
-              className="rounded-lg shrink-0 object-cover"
-            />
+            <div className="w-12 h-12 relative">
+              <Image
+                src={market.image}
+                alt=""
+                fill
+                className="rounded-lg shrink-0 object-cover"
+                priority
+                sizes="64px"
+              />
+            </div>
           )}
           <h1 className="text-2xl font-bold tracking-tight flex-1">
             {market.question}
           </h1>
-          <a
-            href={`https://polymarket.com/market/${market.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors shrink-0 mt-1"
-          >
-            <ArrowUpRight className="size-4" />
-          </a>
+          <PolymarketsLink slug={market.slug} />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-8 gap-y-3 border-b pb-6">
+      <div className="flex flex-wrap gap-x-8 gap-y-3 pb-6">
         <Stat label="24h Volume" value={formatCurrency(market.volume24h)} />
         <Stat label="7d Volume" value={formatCurrency(market.volume1wk)} />
         <Stat label="Liquidity" value={formatCurrency(market.liquidity)} />
         <Stat
           label="End Date"
-          value={
-            market.endDate
-              ? market.endDate.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric"
-                })
-              : "—"
-          }
+          value={market.endDate ? formatDate(market.endDate) : "-"}
         />
         <Stat
           label="Status"

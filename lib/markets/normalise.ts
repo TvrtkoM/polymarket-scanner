@@ -39,7 +39,7 @@ export function normaliseMarket(raw: Record<string, unknown>): Market | null {
     volume24h: (raw.volume24hrClob as number) ?? 0,
     volume1wk: (raw.volume1wkClob as number) ?? 0,
     liquidity: (raw.liquidityNum as number) ?? 0,
-    endDate: raw.endDate ? new Date(raw.endDate as string) : null,
+    endDate: (raw.endDate as string) ?? null,
     active: raw.active as boolean,
     acceptingOrders: raw.acceptingOrders as boolean,
     lastTradePrice: (raw.lastTradePrice as number) ?? 0,

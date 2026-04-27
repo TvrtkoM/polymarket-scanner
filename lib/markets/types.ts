@@ -24,7 +24,7 @@ export type Market = {
   /** Current liquidity available, in USD. */
   liquidity: number
   /** Scheduled resolution date, or `null` if open-ended. */
-  endDate: Date | null
+  endDate: string | null
   /** Whether the market is currently active. */
   active: boolean
   /** Whether the market is currently accepting orders. */

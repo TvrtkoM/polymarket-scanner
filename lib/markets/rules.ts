@@ -60,7 +60,8 @@ const highVolumeSurge: Rule = (market) => {
  */
 const nearResolution: Rule = (market) => {
   if (!market.endDate) return null
-  const daysLeft = (market.endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  const endDate = new Date(market.endDate);
+  const daysLeft = (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   if (daysLeft <= 7 && daysLeft > 0) {
     return {
       marketId: market.id,

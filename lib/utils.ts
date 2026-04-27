@@ -26,6 +26,23 @@ export function formatSignedPercent(fraction: number) {
   return `${sign}${(fraction * 100).toFixed(1)}%`;
 }
 
+/**
+ * Formats an ISO date string into a human-readable date and time.
+ *
+ * @param dateStr - An ISO 8601 date string (e.g. `"2025-04-28T14:30:00Z"`).
+ * @returns A locale string such as `"Apr 28, 2025, 02:30 PM"`.
+ */
+export function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleString("en-US", {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    minute: '2-digit',
+    hour: '2-digit'
+  })
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

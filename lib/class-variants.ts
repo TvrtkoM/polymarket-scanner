@@ -1,6 +1,9 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { Severity } from "./types";
 
+/**
+ * CVA variant map that applies Tailwind colour classes based on a {@link Severity} level.
+ */
 export const severityVariants = cva(
   "",
   {
@@ -17,4 +20,5 @@ export const severityVariants = cva(
   }
 )
 
+/** Props accepted by components that use {@link severityVariants}. */
 export type SeverityVariantProps = VariantProps<typeof severityVariants>

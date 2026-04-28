@@ -43,6 +43,17 @@ export function formatDate(dateStr: string) {
   })
 }
 
+/**
+ * Formats a number as a signed string with two decimal places.
+ *
+ * @param value - The numeric value to format.
+ * @returns A string such as `+1.50` or `-0.75`, always including the sign for non-negative values.
+ */
+export function formatSigned(value: number) {
+  const sign = value >= 0 ? "+" : "";
+  return `${sign}${value.toFixed(2)}`;
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

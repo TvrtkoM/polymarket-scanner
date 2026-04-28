@@ -16,6 +16,8 @@ export type Market = {
   question: string
   /** URL-friendly identifier. */
   slug: string
+  /** Market description */
+  description: string;
   /** All tradeable outcomes for this market. */
   outcomes: Outcome[]
   /** CLOB trading volume over the last 24 hours, in USD. */

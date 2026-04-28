@@ -1,3 +1,4 @@
+import { formatCurrency } from "../utils"
 import type { Market, Rule, Signal } from "./types"
 
 /**
@@ -39,7 +40,7 @@ const highVolumeSurge: Rule = (market) => {
     return {
       marketId: market.id,
       rule: 'high_volume_surge',
-      description: `$${(market.volume24h / 1000).toFixed(0)}k volume in 24h`,
+      description: `${formatCurrency(market.volume24h)} volume in 24h`,
       severity: market.volume24h > 1_000_000 ? 'high' : 'medium',
     }
   }

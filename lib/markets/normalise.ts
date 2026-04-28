@@ -35,6 +35,7 @@ export function normaliseMarket(raw: Record<string, unknown>): Market | null {
     id: raw.id as string,
     question: raw.question as string,
     slug: raw.slug as string,
+    description: raw.description as string,
     outcomes,
     volume24h: (raw.volume24hrClob as number) ?? 0,
     volume1wk: (raw.volume1wkClob as number) ?? 0,

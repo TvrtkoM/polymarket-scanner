@@ -37,33 +37,43 @@ export function MarketCard({
 
       <div className="flex flex-col gap-3 p-4 flex-1">
         {market.eventTitle && (
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground truncate">
             {market.eventTitle}
           </p>
         )}
 
-        <p className="text-sm font-semibold leading-snug line-clamp-2 underline">
+        <h2 className="text-sm font-semibold leading-snug line-clamp-2 underline">
           <Link href={`/markets/${market.slug}`} prefetch>
             {market.question}
           </Link>
-        </p>
+        </h2>
 
         {prob !== null && (
           <div className="flex items-baseline gap-2 mt-auto">
             <span className="text-2xl font-bold">
-              {leadOutcome.label} {prob}%
+              {leadOutcome.label} <span className="font-mono">{prob}%</span>
             </span>
             <span
-              className={`text-xs font-medium ${changePositive ? "text-green-600" : "text-red-500"}`}
+              className={`text-xs font-medium font-mono ${changePositive ? "text-green-600" : "text-red-500"}`}
             >
               {formatSignedPercent(change)} 24h
             </span>
           </div>
         )}
 
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-          <span>Vol 24h: {formatCurrency(market.volume24h)}</span>
-          <span>Liq: {formatCurrency(market.liquidity)}</span>
+        <div className="flex items-baseline flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <span>
+            Vol 24h:{" "}
+            <span className="font-mono font-medium">
+              {formatCurrency(market.volume24h)}
+            </span>
+          </span>
+          <span>
+            Liq:{" "}
+            <span className="font-mono font-medium">
+              {formatCurrency(market.liquidity)}
+            </span>
+          </span>
         </div>
 
         <div className="flex items-center gap-2 pt-1">

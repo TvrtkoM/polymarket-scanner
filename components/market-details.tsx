@@ -1,13 +1,13 @@
 "use client";
 
 import { fetchMarket } from "@/lib/client-api";
-import type { MarketWithSignals, Signal } from "@/lib/markets/types";
-import { cn, formatCurrency, formatDate } from "@/lib/utils";
+import type { MarketWithSignals } from "@/lib/markets/types";
+import { cn, formatCurrency, formatDate, formatSigned } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
-import { PolymarketsLink } from "./ui/polymarkets-link";
 import { SignalBadges } from "./signals";
+import { PolymarketsLink } from "./ui/polymarkets-link";
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -17,49 +17,13 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-0.5">
       <span className="text-xs text-muted-foreground">{label}</span>
       <span className="text-sm font-semibold font-mono">{value}</span>
     </div>
   );
-}
-
-function StatusDot({
-  active,
-  acceptingOrders
-}: {
-  active: boolean;
-  acceptingOrders: boolean;
-}) {
-  if (!active) {
-    return (
-      <span className="flex items-center gap-1.5">
-        <span className="size-1.5 rounded-full bg-zinc-400 inline-block" />
-        Closed
-      </span>
-    );
-  }
-  if (!acceptingOrders) {
-    return (
-      <span className="flex items-center gap-1.5">
-        <span className="size-1.5 rounded-full bg-amber-400 inline-block" />
-        Paused
-      </span>
-    );
-  }
-  return (
-    <span className="flex items-center gap-1.5">
-      <span className="size-1.5 rounded-full bg-emerald-500 inline-block" />
-      Active
-    </span>
-  );
-}
-
-function formatSigned(value: number) {
-  const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)}`;
 }
 
 function MarketDetailsView({ market }: { market: MarketWithSignals }) {
@@ -93,7 +57,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-8 gap-y-3 pb-6">
+      <section className="flex flex-wrap gap-x-8 gap-y-3 pb-6">
         <Stat label="24h Volume" value={formatCurrency(market.volume24h)} />
         <Stat label="7d Volume" value={formatCurrency(market.volume1wk)} />
         <Stat label="Liquidity" value={formatCurrency(market.liquidity)} />
@@ -101,18 +65,14 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           label="End Date"
           value={market.endDate ? formatDate(market.endDate) : "-"}
         />
-        <Stat
-          label="Status"
-          value={
-            <StatusDot
-              active={market.active}
-              acceptingOrders={market.acceptingOrders}
-            />
-          }
-        />
-      </div>
+      </section>
 
-      <div className="border-t pt-6">
+      <section>
+        <SectionHeading>Description</SectionHeading>
+        <p>{market.description}</p>
+      </section>
+
+      <section className="border-t pt-6">
         <SectionHeading>Outcomes</SectionHeading>
         <div className="space-y-3">
           {market.outcomes.map((outcome, i) => (
@@ -151,9 +111,9 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="border-t pt-6">
+      <section className="border-t pt-6">
         <SectionHeading>Order Book</SectionHeading>
         <div className="grid grid-cols-3 rounded-lg overflow-hidden text-sm mb-3">
           <div className="bg-emerald-50 dark:bg-emerald-950 px-4 py-3">
@@ -177,9 +137,9 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           Last trade:{" "}
           <span className="font-mono">{market.lastTradePrice.toFixed(2)}</span>
         </p>
-      </div>
+      </section>
 
-      <div className="border-t pt-6">
+      <section className="border-t pt-6">
         <SectionHeading>Price Movement</SectionHeading>
         <div className="flex gap-8">
           <div className="flex flex-col gap-0.5">
@@ -213,7 +173,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
             </span>
           </div>
         </div>
-      </div>
+      </section>
 
       {market.signals.length > 0 && (
         <div className="border-t pt-6">

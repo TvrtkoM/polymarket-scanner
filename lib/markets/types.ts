@@ -1,3 +1,4 @@
+import type { Severity } from "../types"
 
 /** A single tradeable outcome within a {@link Market}. */
 export type Outcome = {
@@ -68,7 +69,7 @@ export type Signal = {
   /** Human-readable explanation of why the signal fired. */
   description: string
   /** Urgency level of the signal. */
-  severity: 'low' | 'medium' | 'high'
+  severity: Severity;
 }
 
 /**

@@ -1,12 +1,12 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, Ref } from "react";
 
-export function HorizontalScroller({
+export function HorizontalScroller<E extends HTMLElement>({
   children
 }: {
-  children: (ref: React.RefObject<HTMLElement | null>) => React.ReactNode;
+  children: (ref: Ref<E | null>) => React.ReactNode;
 }) {
-  const scrollRef = useRef<HTMLElement>(null);
+  const scrollRef = useRef<E | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 

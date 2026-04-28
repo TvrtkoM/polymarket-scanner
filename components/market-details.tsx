@@ -7,6 +7,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { PolymarketsLink } from "./ui/polymarkets-link";
+import { SignalBadges } from "./signals";
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -52,25 +53,6 @@ function StatusDot({
     <span className="flex items-center gap-1.5">
       <span className="size-1.5 rounded-full bg-emerald-500 inline-block" />
       Active
-    </span>
-  );
-}
-
-function SignalBadge({ signal }: { signal: Signal }) {
-  return (
-    <span
-      title={signal.rule}
-      className={cn(
-        "rounded-full px-2.5 py-0.5 text-xs font-medium",
-        signal.severity === "high" &&
-          "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400",
-        signal.severity === "medium" &&
-          "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400",
-        signal.severity === "low" &&
-          "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400"
-      )}
-    >
-      {signal.description}
     </span>
   );
 }
@@ -236,11 +218,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
       {market.signals.length > 0 && (
         <div className="border-t pt-6">
           <SectionHeading>Signals</SectionHeading>
-          <div className="flex flex-wrap gap-2">
-            {market.signals.map((signal, i) => (
-              <SignalBadge key={i} signal={signal} />
-            ))}
-          </div>
+          <SignalBadges signals={market.signals} />
         </div>
       )}
     </div>

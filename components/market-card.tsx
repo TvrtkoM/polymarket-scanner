@@ -4,7 +4,7 @@ import type { MarketWithSignals } from "@/lib/markets/types";
 import { formatCurrency, formatSignedPercent } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { SignalBadges } from "./signals";
 import { HorizontalScroller } from "./ui/horizontal-scroller";
 import { PolymarketsLink } from "./ui/polymarkets-link";
 
@@ -69,30 +69,8 @@ export function MarketCard({
         <div className="flex items-center gap-2 pt-1">
           <div className="flex-1 min-w-0">
             {market.signals.length > 0 ? (
-              <HorizontalScroller>
-                {(ref) => (
-                  <ul
-                    ref={ref as React.RefObject<HTMLUListElement>}
-                    className="flex gap-1 overflow-x-auto scrollbar-none flex-1 min-w-0"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                  >
-                    {market.signals.map((s) => (
-                      <li
-                        key={s.rule}
-                        title={s.description}
-                        className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-                          s.severity === "high"
-                            ? "bg-red-100 text-red-700"
-                            : s.severity === "medium"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-blue-100 text-blue-700"
-                        }`}
-                      >
-                        {s.rule}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+              <HorizontalScroller<HTMLDivElement>>
+                {(ref) => <SignalBadges ref={ref} signals={market.signals} />}
               </HorizontalScroller>
             ) : (
               <div className="py-0.5 text-xs font-medium">No signals</div>

@@ -1,4 +1,6 @@
+import { severityVariants } from "@/lib/class-variants";
 import { isRetryable } from "@/lib/errors";
+import { cn } from "@/lib/utils";
 
 export function ErrorComponent({
   error,
@@ -9,8 +11,13 @@ export function ErrorComponent({
 }) {
   const canRetry = isRetryable(error);
   return (
-    <div className="flex flex-col items-center gap-4 rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-      <p className="text-red-700">{error.message}</p>
+    <div
+      className={cn(
+        "flex flex-col items-center gap-4 rounded-lg border border-red-200 p-6 text-center",
+        severityVariants({ severity: "high" })
+      )}
+    >
+      <p>{error.message}</p>
       {canRetry && (
         <button
           onClick={onRetry}

@@ -2,7 +2,13 @@
 
 import { fetchMarket } from "@/lib/client-api";
 import type { MarketWithSignals } from "@/lib/markets/types";
-import { cn, formatCurrency, formatDate, formatSigned } from "@/lib/utils";
+import {
+  cn,
+  formatCurrency,
+  formatDate,
+  formatPrice,
+  formatSigned
+} from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
@@ -88,7 +94,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
               </div>
               <div className="flex items-center gap-1.5 w-28 justify-end">
                 <span className="font-mono font-bold text-sm">
-                  {outcome.price.toFixed(2)}
+                  {formatPrice(outcome.price)}
                 </span>
                 {isBinary && i === 0 && market.oneDayPriceChange !== 0 && (
                   <span
@@ -119,23 +125,25 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           <div className="bg-emerald-50 dark:bg-emerald-950 px-4 py-3">
             <p className="text-xs text-muted-foreground mb-1">Best Bid</p>
             <p className="font-mono font-bold text-emerald-700 dark:text-emerald-400">
-              {market.bestBid.toFixed(2)}
+              {formatPrice(market.bestBid)}
             </p>
           </div>
           <div className="bg-muted/40 px-4 py-3">
             <p className="text-xs text-muted-foreground mb-1">Spread</p>
-            <p className="font-mono font-bold">{market.spread.toFixed(2)}</p>
+            <p className="font-mono font-bold">{formatPrice(market.spread)}</p>
           </div>
           <div className="bg-red-50 dark:bg-red-950 px-4 py-3 text-right">
             <p className="text-xs text-muted-foreground mb-1">Best Ask</p>
             <p className="font-mono font-bold text-red-700 dark:text-red-400">
-              {market.bestAsk.toFixed(2)}
+              {formatPrice(market.bestAsk)}
             </p>
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
           Last trade:{" "}
-          <span className="font-mono">{market.lastTradePrice.toFixed(2)}</span>
+          <span className="font-mono">
+            {formatPrice(market.lastTradePrice)}
+          </span>
         </p>
       </section>
 

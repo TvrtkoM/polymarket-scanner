@@ -2,6 +2,7 @@
 
 import type { MarketWithSignals } from "@/lib/markets/types";
 import { formatCurrency, formatSignedPercent } from "@/lib/utils";
+import Decimal from "decimal.js";
 import Image from "next/image";
 import Link from "next/link";
 import { SignalBadges } from "./signals";
@@ -16,7 +17,8 @@ export function MarketCard({
   imagePriority?: boolean;
 }) {
   const leadOutcome = market.outcomes[0];
-  const prob = leadOutcome ? Math.round(leadOutcome.price * 100) : null;
+  const leadOutcomePrice = new Decimal(leadOutcome.price);
+  const prob = leadOutcomePrice.mul(100).toSignificantDigits(4).toString();
   const change = market.oneDayPriceChange;
   const changePositive = change >= 0;
 
@@ -48,18 +50,16 @@ export function MarketCard({
           </Link>
         </h2>
 
-        {prob !== null && (
-          <div className="flex items-baseline gap-2 mt-auto">
-            <span className="text-2xl font-bold">
-              {leadOutcome.label} <span className="font-mono">{prob}%</span>
-            </span>
-            <span
-              className={`text-xs font-medium font-mono ${changePositive ? "text-green-600" : "text-red-500"}`}
-            >
-              {formatSignedPercent(change)} 24h
-            </span>
-          </div>
-        )}
+        <div className="flex items-baseline gap-2 mt-auto">
+          <span className="text-2xl font-bold">
+            {leadOutcome.label} <span className="font-mono">{prob}%</span>
+          </span>
+          <span
+            className={`text-xs font-medium font-mono ${changePositive ? "text-green-600" : "text-red-500"}`}
+          >
+            {formatSignedPercent(change)} 24h
+          </span>
+        </div>
 
         <div className="flex items-baseline flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <span>

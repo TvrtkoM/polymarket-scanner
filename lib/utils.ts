@@ -1,5 +1,6 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import Decimal from "decimal.js";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Formats a dollar amount into a compact, human-readable string with K/M suffixes.
@@ -51,7 +52,18 @@ export function formatDate(dateStr: string) {
  */
 export function formatSigned(value: number) {
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)}`;
+  return `${sign}${formatPrice(value)}`;
+}
+
+/**
+ * Formats a price value to a given number of significant digits.
+ *
+ * @param value - The numeric price to format.
+ * @param significantDigits - Number of significant digits to display. Defaults to `4`.
+ * @returns A string representation of the price rounded to `significantDigits` significant digits.
+ */
+export function formatPrice(value: number, significantDigits = 4) {
+  return new Decimal(value).toSignificantDigits(significantDigits).toString();
 }
 
 export function cn(...inputs: ClassValue[]) {

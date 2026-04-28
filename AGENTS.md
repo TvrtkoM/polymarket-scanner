@@ -33,6 +33,7 @@ Goal is to add more functionality to the app to improve decision making before m
 
 - **strict _typescript_**: _unknown_ should be preferred to _any_, but generally everything should be typed
 - **icons**: use icons from lucide-react library, avoid inline svg
+- **formatting**: use formatting utility functions located in `lib/utils.ts` file
 - **SOLID principles**: where possible, write reusable and maintanable code according to SOLID principles
 
 <!-- BEGIN:nextjs-agent-rules -->

@@ -26,13 +26,12 @@ export async function apiFetch<T>(
 /**
  * Fetches a paginated list of markets with their associated signals.
  *
- * @param page - Zero-based page index to retrieve.
- * @defaultValue page `0`
- * @returns An object containing the markets for the requested page and whether more pages exist.
+ * @param cursor - Opaque cursor string identifying the next page. Omit or pass `undefined` to fetch the first page.
+ * @returns An object containing the markets for the requested page and the cursor for the next page.
  * @throws {@link ApiError} When the response status is not ok.
  */
-export async function fetchMarkets(page = 0) {
-  return apiFetch<{ markets: MarketWithSignals[]; hasNextPage: boolean }>(`/api/markets?page=${page}`);
+export async function fetchMarkets(cursor?: string) {
+  return apiFetch<{ markets: MarketWithSignals[]; nextCursor: string }>(`/api/markets?cursor=${cursor ?? ""}`);
 }
 
 /**

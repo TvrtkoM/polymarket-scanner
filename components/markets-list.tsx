@@ -126,9 +126,8 @@ export function MarketsList() {
     useSuspenseInfiniteQuery({
       queryKey: ["markets"],
       queryFn: ({ pageParam }) => fetchMarkets(pageParam),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage, _allPages, lastPageParam) =>
-        lastPage.hasNextPage ? lastPageParam + 1 : undefined
+      initialPageParam: undefined as string | undefined,
+      getNextPageParam: (lastPage) => lastPage.nextCursor
     });
 
   const cols = useColumnCount();

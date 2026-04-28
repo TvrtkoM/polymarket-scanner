@@ -10,8 +10,8 @@ async function Markets() {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["markets"],
-    queryFn: () => getMarkets(0),
-    initialPageParam: 0
+    queryFn: () => getMarkets(),
+    initialPageParam: undefined
   });
 
   return (

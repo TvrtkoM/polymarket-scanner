@@ -11,13 +11,12 @@ import type { MarketWithSignals } from "./types";
  *
  * Results are cached by Next.js and revalidated every 60 seconds.
  *
- * @param page - Zero-based page index to retrieve.
- * @defaultValue page `0`
- * @returns An object containing the normalised {@link MarketWithSignals} array for the requested page and whether more pages exist.
+ * @param cursor - Opaque keyset cursor returned by a previous call; omit to fetch the first page.
+ * @returns An object containing the normalised {@link MarketWithSignals} array and an opaque `nextCursor` to pass on the next call.
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
-export async function getMarkets(page = 0): Promise<{ markets: MarketWithSignals[]; hasNextPage: boolean }> {
-  const params = new URLSearchParams({
+export async function getMarkets(cursor?: string): Promise<{ markets: MarketWithSignals[]; nextCursor: string }> {
+  let params: Record<string, string> = {
     active: 'true',
     closed: 'false',
     archived: 'false',
@@ -25,29 +24,36 @@ export async function getMarkets(page = 0): Promise<{ markets: MarketWithSignals
     liquidity_num_min: '1000',
     order: 'volume24hrClob',
     ascending: 'false',
-    limit: (marketsPageCount + 1).toString(),
-    offset: (page * marketsPageCount).toString(),
-  })
+    limit: marketsPageCount.toString(),
+  };
+
+  if (cursor) {
+    params = { ...params, after_cursor: cursor };
+  }
 
   const res = await fetch(
-    `${GAMMA_URL}/markets?${params}`,
-    { next: { revalidate: 60 } }
+    `${GAMMA_URL}/markets/keyset?${new URLSearchParams(params)}`,
+    {
+      next: { revalidate: 60 }
+    }
   )
 
   if (!res.ok) {
     throw new ApiError(`Polymarket API error`, res.status)
   }
 
-  const raw: Record<string, unknown>[] = await res.json()
-  const hasNextPage = raw.length > marketsPageCount
+  const raw: { markets: Record<string, unknown>[], next_cursor: string } = await res.json()
 
-  const markets = raw
+  const nextCursor = raw.next_cursor;
+  const marketsRaw = raw.markets;
+
+  const markets = marketsRaw
     .slice(0, marketsPageCount)
     .map(normaliseMarket)
     .filter((m) => m != null)
     .map((market) => ({ ...market, signals: runRules(market) }))
 
-  return { markets, hasNextPage }
+  return { markets, nextCursor }
 }
 
 

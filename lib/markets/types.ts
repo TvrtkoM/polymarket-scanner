@@ -8,6 +8,14 @@ export type Outcome = {
   price: number
 }
 
+/** UMA optimistic oracle dispute data for a market that went through propose/dispute cycles. */
+export type MarketDisputes = {
+  /** Outcome of the first proposal */
+  proposedPrice: number
+  /** Outcome re-proposed after first dispute, or null if not yet re-proposed. */
+  reproposedPrice: number | null
+}
+
 /** A normalised prediction market, derived from a raw Polymarket API response. */
 export type Market = {
   /** Unique market identifier. */
@@ -52,6 +60,8 @@ export type Market = {
   eventSlug: string | null
   /** URL of the market's cover image, or `null` if none. */
   image: string | null
+  /** UMA dispute resolution data, or `null` if the market was never disputed. */
+  disputes: MarketDisputes | null
 }
 
 /** Mixin that attaches rule-engine signals to any type. */

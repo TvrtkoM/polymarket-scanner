@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchMarket } from "@/lib/client-api";
-import type { MarketWithSignals } from "@/lib/markets/types";
+import type { MarketDisputes, MarketWithSignals } from "@/lib/markets/types";
 import {
   cn,
   formatCurrency,
@@ -28,6 +28,62 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="flex flex-col gap-0.5">
       <span className="text-xs text-muted-foreground">{label}</span>
       <span className="text-sm font-semibold font-mono">{value}</span>
+    </div>
+  );
+}
+
+function DisputeTimeline({ disputes }: { disputes: MarketDisputes }) {
+  type Node = { key: string; label: string; isDispute: boolean };
+  const nodes: Node[] = [
+    {
+      key: "proposed-1",
+      label: `Price proposed: ${formatPrice(disputes.proposedPrice)}`,
+      isDispute: false
+    },
+    { key: "disputed-1", label: "Disputed", isDispute: true },
+    ...(disputes.reproposedPrice !== null
+      ? [
+          {
+            key: "proposed-2",
+            label: `Price proposed: ${formatPrice(disputes.reproposedPrice)}`,
+            isDispute: false
+          },
+          { key: "disputed-2", label: "Disputed", isDispute: true }
+        ]
+      : [])
+  ];
+
+  return (
+    <div className="flex flex-col">
+      {nodes.map((node, i) => (
+        <div key={node.key} className="flex items-start gap-3">
+          <div className="flex flex-col items-center">
+            <div
+              className={cn(
+                "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0",
+                node.isDispute
+                  ? "border-muted-foreground bg-background"
+                  : "border-sky-500 bg-sky-500"
+              )}
+            >
+              {!node.isDispute && (
+                <div className="w-2 h-2 rounded-full bg-white" />
+              )}
+            </div>
+            {i < nodes.length - 1 && (
+              <div className="w-px flex-1 bg-border my-1 min-h-4" />
+            )}
+          </div>
+          <p
+            className={cn(
+              "text-sm pb-4",
+              node.isDispute ? "text-muted-foreground" : "font-medium font-mono"
+            )}
+          >
+            {node.label}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -182,6 +238,13 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           </div>
         </div>
       </section>
+
+      {market.disputes && (
+        <section className="border-t pt-6">
+          <SectionHeading>Resolution Disputes</SectionHeading>
+          <DisputeTimeline disputes={market.disputes} />
+        </section>
+      )}
 
       {market.signals.length > 0 && (
         <div className="border-t pt-6">

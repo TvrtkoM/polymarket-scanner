@@ -1,3 +1,4 @@
+import { parseWeiPrice } from "../utils"
 import type { Market, Outcome } from "./types"
 
 /**
@@ -10,7 +11,7 @@ import type { Market, Outcome } from "./types"
  * @param raw - An untyped market object from the Polymarket REST API.
  * @returns A normalised {@link Market}, or `null` if the market should be skipped.
  */
-export function normaliseMarket(raw: Record<string, unknown>): Market | null {
+export function normaliseMarket(raw: Record<string, unknown>, resolution?: Record<string, unknown>): Market | null {
   // drop markets we don't care about
   if (!raw.active || raw.closed || raw.archived) return null
   if (!raw.acceptingOrders) return null
@@ -53,5 +54,13 @@ export function normaliseMarket(raw: Record<string, unknown>): Market | null {
     eventId: events?.[0]?.id as string ?? null,
     eventSlug: events?.[0]?.slug as string ?? null,
     image: (raw.image as string) ?? null,
+    disputes: resolution ? (() => {
+      const proposedPrice = resolution.proposedPrice as string
+      const reproposedPrice = resolution.reproposedPrice as string
+      return {
+        proposedPrice: parseWeiPrice(proposedPrice),
+        reproposedPrice: reproposedPrice === '69' ? null : parseWeiPrice(reproposedPrice),
+      }
+    })() : null,
   }
 }

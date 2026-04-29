@@ -69,3 +69,13 @@ export function formatPrice(value: number, significantDigits = 4) {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+/**
+ * Parses a UMA wei-encoded price string into a decimal number.
+ *
+ * @param s - A wei string such as `"0"` or `"1000000000000000000"`.
+ * @returns `0` for No or `1` for Yes.
+ */
+export function parseWeiPrice(s: string): number {
+  return new Decimal(s).div(new Decimal('1e18')).toNumber()
+}

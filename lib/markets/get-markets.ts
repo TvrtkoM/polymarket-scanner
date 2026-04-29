@@ -5,6 +5,8 @@ import { runRules } from "./rules";
 import { GAMMA_URL, marketsPageCount } from "./constants";
 import type { MarketWithSignals } from "./types";
 
+const DATA_API_URL = 'https://data-api.polymarket.com'
+
 /**
  * Fetches a paginated list of active, tradeable markets from the Polymarket API,
  * normalises each entry, and attaches computed trading signals.
@@ -49,7 +51,7 @@ export async function getMarkets(cursor?: string): Promise<{ markets: MarketWith
 
   const markets = marketsRaw
     .slice(0, marketsPageCount)
-    .map(normaliseMarket)
+    .map((rawMarket) => normaliseMarket(rawMarket))
     .filter((m) => m != null)
     .map((market) => ({ ...market, signals: runRules(market) }))
 
@@ -78,7 +80,18 @@ export async function getMarket(slug: string): Promise<{ market: MarketWithSigna
 
   console.log(raw)
 
-  const market = normaliseMarket(raw);
+  const statuses = raw.umaResolutionStatuses as string[] | undefined
+  const hasDispute = statuses?.includes('disputed') ?? false
+
+  let resolution: Record<string, unknown> | undefined
+  if (hasDispute && raw.questionID) {
+    const dRes = await fetch(`${DATA_API_URL}/subgraph/resolution/${raw.questionID}`)
+    if (!dRes.ok) throw new ApiError(`Dispute resolution API error`, dRes.status)
+    const dRaw = await dRes.json()
+    resolution = dRaw.data as Record<string, unknown>
+  }
+
+  const market = normaliseMarket(raw, resolution);
 
   if (!market) {
     throw new ApiError(`Market not found`, 404)

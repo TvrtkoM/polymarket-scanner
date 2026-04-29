@@ -1,7 +1,16 @@
 "use client";
 
 import type { MarketWithSignals } from "@/lib/markets/types";
-import { formatCurrency, formatSignedPercent } from "@/lib/utils";
+import { formatCurrency, formatDate, formatSignedPercent } from "@/lib/utils";
+
+function StatItem({ label, value }: { label: string; value: string }) {
+  return (
+    <span>
+      {label}:{" "}
+      <span className="font-mono font-medium">{value}</span>
+    </span>
+  );
+}
 import Decimal from "decimal.js";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,18 +71,11 @@ export function MarketCard({
         </div>
 
         <div className="flex items-baseline flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-          <span>
-            Vol 24h:{" "}
-            <span className="font-mono font-medium">
-              {formatCurrency(market.volume24h)}
-            </span>
-          </span>
-          <span>
-            Liq:{" "}
-            <span className="font-mono font-medium">
-              {formatCurrency(market.liquidity)}
-            </span>
-          </span>
+          <StatItem label="Vol 24h" value={formatCurrency(market.volume24h)} />
+          <StatItem label="Liq" value={formatCurrency(market.liquidity)} />
+          {market.endDate && (
+            <StatItem label="End Date" value={formatDate(market.endDate)} />
+          )}
         </div>
 
         <div className="flex items-center gap-2 pt-1">

@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const disputes = await getMarketDisputes(questionId)
-    return NextResponse.json({ disputes })
+    return NextResponse.json(disputes)
   } catch (e) {
     const message = e instanceof ApiError ? e.message : 'Failed to fetch dispute resolution data'
     const statusCode = e instanceof ApiError ? e.statusCode : 502

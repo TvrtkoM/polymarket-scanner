@@ -88,7 +88,13 @@ function DisputeTimeline({ disputes }: { disputes: MarketDisputes }) {
   );
 }
 
-function MarketDetailsView({ market, disputes }: { market: MarketWithSignals; disputes: MarketDisputes | null }) {
+function MarketDetailsView({
+  market,
+  disputes
+}: {
+  market: MarketWithSignals;
+  disputes: MarketDisputes | null;
+}) {
   const isBinary = market.outcomes.length === 2;
 
   return (
@@ -257,18 +263,16 @@ function MarketDetailsView({ market, disputes }: { market: MarketWithSignals; di
 }
 
 export function MarketDetails({ slug }: { slug: string }) {
-  const { data } = useSuspenseQuery({
+  const { data: market } = useSuspenseQuery({
     queryKey: ["market", slug],
     queryFn: () => fetchMarket(slug)
   });
 
-  const market = data.market;
-
-  const { data: disputesData } = useQuery({
+  const { data: disputes } = useQuery({
     queryKey: ["market-disputes", market.questionId],
     queryFn: () => fetchMarketDisputes(market.questionId!),
-    enabled: market.disputed && market.questionId !== null,
+    enabled: market.disputed && market.questionId !== null
   });
 
-  return <MarketDetailsView market={market} disputes={disputesData?.disputes ?? null} />;
+  return <MarketDetailsView market={market} disputes={disputes ?? null} />;
 }

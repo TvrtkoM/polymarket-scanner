@@ -67,10 +67,10 @@ export async function getMarkets(cursor?: string): Promise<{ markets: MarketWith
  * Results are cached by Next.js and revalidated every 60 seconds.
  *
  * @param slug - The URL slug that uniquely identifies the market.
- * @returns An object containing the normalised {@link MarketWithSignals}, or `null` if the slug does not match a valid market.
+ * @returns normalised {@link MarketWithSignals}
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
-export async function getMarket(slug: string): Promise<{ market: MarketWithSignals } | null> {
+export async function getMarket(slug: string): Promise<MarketWithSignals> {
   const res = await fetch(`${GAMMA_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
 
   if (!res.ok) {
@@ -85,7 +85,7 @@ export async function getMarket(slug: string): Promise<{ market: MarketWithSigna
     throw new ApiError(`Market not found`, 404)
   }
 
-  return { market: { ...market, signals: runRules(market) } };
+  return { ...market, signals: runRules(market) };
 }
 
 /**

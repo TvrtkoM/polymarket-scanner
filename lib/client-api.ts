@@ -38,20 +38,20 @@ export async function fetchMarkets(cursor?: string) {
  * Fetches a single market by its slug from the internal API route.
  *
  * @param slug - The URL slug that uniquely identifies the market.
- * @returns An object containing the {@link MarketWithSignals} for the requested slug.
+ * @returns {@link MarketWithSignals} for the requested slug.
  * @throws {@link ApiError} When the response status is not ok.
  */
 export async function fetchMarket(slug: string) {
-  return apiFetch<{ market: MarketWithSignals }>(`/api/market?slug=${slug}`)
+  return apiFetch<MarketWithSignals>(`/api/market?slug=${slug}`)
 }
 
 /**
  * Fetches UMA dispute resolution data for a market by its question ID.
  *
  * @param questionId - The UMA question ID for the market.
- * @returns An object containing the {@link MarketDisputes} for the market.
+ * @returns {@link MarketDisputes} for the market.
  * @throws {@link ApiError} When the response status is not ok.
  */
 export async function fetchMarketDisputes(questionId: string) {
-  return apiFetch<{ disputes: MarketDisputes }>(`/api/market/disputes?questionId=${questionId}`)
+  return apiFetch<MarketDisputes>(`/api/market/disputes?questionId=${questionId}`)
 }

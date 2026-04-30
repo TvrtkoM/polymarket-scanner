@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps) {
     const data = await getMarketCached(slug);
 
     return {
-      title: data?.market.question ?? "404 - Not found"
+      title: data?.question ?? "404 - Not found"
     };
   } catch {
     return {

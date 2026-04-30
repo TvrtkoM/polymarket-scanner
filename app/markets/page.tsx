@@ -7,12 +7,24 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 export const metadata = { title: "Markets" };
 
-type MarketsSearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+type MarketsSearchParams = Promise<{
+  [key: string]: string | string[] | undefined;
+}>;
 
-async function Markets({ searchParams }: { searchParams: MarketsSearchParams }) {
+async function Markets({
+  searchParams
+}: {
+  searchParams: MarketsSearchParams;
+}) {
   const queryClient = getQueryClient();
   const params = await marketsSearchParamsCache.parse(searchParams);
-  const queryKey: [string, ...unknown[]] = ['markets', params.order, params.liquidity_num_min, params.tag_match];
+
+  const queryKey: [string, ...unknown[]] = [
+    "markets",
+    params.order,
+    params.liquidity_num_min,
+    params.tag_match
+  ];
 
   await queryClient.prefetchInfiniteQuery({
     queryKey,
@@ -27,7 +39,11 @@ async function Markets({ searchParams }: { searchParams: MarketsSearchParams }) 
   );
 }
 
-export default function MarketsPage({ searchParams }: { searchParams: MarketsSearchParams }) {
+export default function MarketsPage({
+  searchParams
+}: {
+  searchParams: MarketsSearchParams;
+}) {
   return (
     <>
       <h1 className="mb-6 text-3xl font-bold tracking-tight">Markets</h1>

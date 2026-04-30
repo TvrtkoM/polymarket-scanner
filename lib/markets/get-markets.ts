@@ -3,7 +3,8 @@ import { ApiError } from "../errors";
 import { normaliseMarket } from "./normalise";
 import { runRules } from "./rules";
 import { GAMMA_URL, marketsPageCount } from "./constants";
-import type { MarketWithSignals } from "./types";
+import { parseWeiPrice } from "../utils";
+import type { MarketDisputes, MarketWithSignals } from "./types";
 
 const DATA_API_URL = 'https://data-api.polymarket.com'
 
@@ -78,24 +79,31 @@ export async function getMarket(slug: string): Promise<{ market: MarketWithSigna
 
   const raw: Record<string, unknown> = await res.json();
 
-  console.log(raw)
-
-  const statuses = raw.umaResolutionStatuses as string[] | undefined
-  const hasDispute = statuses?.includes('disputed') ?? false
-
-  let resolution: Record<string, unknown> | undefined
-  if (hasDispute && raw.questionID) {
-    const dRes = await fetch(`${DATA_API_URL}/subgraph/resolution/${raw.questionID}`)
-    if (!dRes.ok) throw new ApiError(`Dispute resolution API error`, dRes.status)
-    const dRaw = await dRes.json()
-    resolution = dRaw.data as Record<string, unknown>
-  }
-
-  const market = normaliseMarket(raw, resolution);
+  const market = normaliseMarket(raw);
 
   if (!market) {
     throw new ApiError(`Market not found`, 404)
   }
 
   return { market: { ...market, signals: runRules(market) } };
+}
+
+/**
+ * Fetches UMA dispute resolution data for a single market by its question ID.
+ *
+ * @param questionId - The UMA question ID for the market.
+ * @returns The {@link MarketDisputes} data for the market.
+ * @throws {@link ApiError} When the data API responds with a non-2xx status.
+ */
+export async function getMarketDisputes(questionId: string): Promise<MarketDisputes> {
+  const res = await fetch(`${DATA_API_URL}/subgraph/resolution/${questionId}`)
+  if (!res.ok) throw new ApiError(`Dispute resolution API error`, res.status)
+  const raw = await res.json()
+  const data = raw.data as Record<string, unknown>
+  const proposedPrice = data.proposedPrice as string
+  const reproposedPrice = data.reproposedPrice as string
+  return {
+    proposedPrice: parseWeiPrice(proposedPrice),
+    reproposedPrice: reproposedPrice === '69' ? null : parseWeiPrice(reproposedPrice),
+  }
 }

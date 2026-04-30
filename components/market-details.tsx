@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchMarket } from "@/lib/client-api";
+import { fetchMarket, fetchMarketDisputes } from "@/lib/client-api";
 import type { MarketDisputes, MarketWithSignals } from "@/lib/markets/types";
 import {
   cn,
@@ -9,7 +9,7 @@ import {
   formatPrice,
   formatSigned
 } from "@/lib/utils";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { SignalBadges } from "./signals";
@@ -88,7 +88,7 @@ function DisputeTimeline({ disputes }: { disputes: MarketDisputes }) {
   );
 }
 
-function MarketDetailsView({ market }: { market: MarketWithSignals }) {
+function MarketDetailsView({ market, disputes }: { market: MarketWithSignals; disputes: MarketDisputes | null }) {
   const isBinary = market.outcomes.length === 2;
 
   return (
@@ -239,10 +239,10 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         </div>
       </section>
 
-      {market.disputes && (
+      {disputes && (
         <section className="border-t pt-6">
           <SectionHeading>Resolution Disputes</SectionHeading>
-          <DisputeTimeline disputes={market.disputes} />
+          <DisputeTimeline disputes={disputes} />
         </section>
       )}
 
@@ -262,5 +262,13 @@ export function MarketDetails({ slug }: { slug: string }) {
     queryFn: () => fetchMarket(slug)
   });
 
-  return <MarketDetailsView market={data.market} />;
+  const market = data.market;
+
+  const { data: disputesData } = useQuery({
+    queryKey: ["market-disputes", market.questionId],
+    queryFn: () => fetchMarketDisputes(market.questionId!),
+    enabled: market.disputed && market.questionId !== null,
+  });
+
+  return <MarketDetailsView market={market} disputes={disputesData?.disputes ?? null} />;
 }

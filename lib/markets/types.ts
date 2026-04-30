@@ -60,8 +60,10 @@ export type Market = {
   eventSlug: string | null
   /** URL of the market's cover image, or `null` if none. */
   image: string | null
-  /** UMA dispute resolution data, or `null` if the market was never disputed. */
-  disputes: MarketDisputes | null
+  /** Whether the market has an active or past UMA dispute. */
+  disputed: boolean
+  /** UMA question ID or `null` if none. */
+  questionId: string | null
 }
 
 /** Mixin that attaches rule-engine signals to any type. */

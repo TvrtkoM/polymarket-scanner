@@ -3,8 +3,9 @@ import { ApiError } from "../errors";
 import { normaliseMarket } from "./normalise";
 import { runRules } from "./rules";
 import { GAMMA_URL, marketsPageCount } from "./constants";
-import { parseWeiPrice } from "../utils";
+import { parseWeiPrice, toStringRecord } from "../utils";
 import type { MarketDisputes, MarketWithSignals } from "./types";
+import type { MarketsParams } from "./search-params";
 
 const DATA_API_URL = 'https://data-api.polymarket.com'
 
@@ -18,16 +19,18 @@ const DATA_API_URL = 'https://data-api.polymarket.com'
  * @returns An object containing the normalised {@link MarketWithSignals} array and an opaque `nextCursor` to pass on the next call.
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
-export async function getMarkets(cursor?: string): Promise<{ markets: MarketWithSignals[]; nextCursor: string }> {
+export async function getMarkets(
+  cursor?: string,
+  options: MarketsParams = { order: 'volume24hrClob', liquidity_num_min: 1000, tag_match: '' }
+): Promise<{ markets: MarketWithSignals[]; nextCursor: string }> {
   let params: Record<string, string> = {
     active: 'true',
     closed: 'false',
     archived: 'false',
     accepting_orders: 'true',
-    liquidity_num_min: '1000',
-    order: 'volume24hrClob',
-    ascending: 'false',
     limit: marketsPageCount.toString(),
+    ...toStringRecord(options),
+    ascending: options.order === 'endDateIso' ? 'true' : 'false',
   };
 
   if (cursor) {

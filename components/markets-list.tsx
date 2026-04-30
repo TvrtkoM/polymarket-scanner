@@ -1,10 +1,12 @@
 "use client";
 
 import { fetchMarkets } from "@/lib/client-api";
+import { marketsSearchParsers } from "@/lib/markets/search-params";
 import type { MarketWithSignals } from "@/lib/markets/types";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useQueryStates } from "nuqs";
 import { ErrorComponent } from "./error";
 import { MarketCard } from "./market-card";
 
@@ -122,10 +124,13 @@ function MarketsVirtualList({
 }
 
 export function MarketsList() {
+  const [{ order, liquidity_num_min, tag_match }] = useQueryStates(marketsSearchParsers);
+  const queryKey = ['markets', order, liquidity_num_min, tag_match];
+
   const { data, fetchNextPage, hasNextPage, error, isFetchingNextPage } =
     useSuspenseInfiniteQuery({
-      queryKey: ["markets"],
-      queryFn: ({ pageParam }) => fetchMarkets(pageParam),
+      queryKey,
+      queryFn: ({ pageParam }) => fetchMarkets(pageParam, { order, liquidity_num_min, tag_match }),
       initialPageParam: undefined as string | undefined,
       getNextPageParam: (lastPage) => lastPage.nextCursor
     });
@@ -154,16 +159,14 @@ export function MarketsList() {
   }
 
   return (
-    <>
-      <MarketsVirtualList
-        key={cols}
-        markets={markets}
-        cols={cols}
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        error={error}
-      />
-    </>
+    <MarketsVirtualList
+      key={`${cols}-${order}-${liquidity_num_min}-${tag_match}`}
+      markets={markets}
+      cols={cols}
+      fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      error={error}
+    />
   );
 }

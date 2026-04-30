@@ -79,3 +79,21 @@ export function cn(...inputs: ClassValue[]) {
 export function parseWeiPrice(s: string): number {
   return new Decimal(s).div(new Decimal('1e18')).toNumber()
 }
+
+/**
+ * Converts a loose record to `Record<string, string>`, omitting entries that are
+ * `null`, `undefined`, or empty string. The result is directly usable with
+ * `new URLSearchParams`.
+ *
+ * @param input - Object whose values may be string, number, boolean, null, or undefined.
+ * @returns A new object with only defined, non-empty values coerced to strings.
+ */
+export function toStringRecord(
+  input: Record<string, string | number | boolean | null | undefined>
+): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(input)
+      .filter(([, v]) => v != null && v !== '')
+      .map(([k, v]) => [k, String(v)])
+  )
+}

@@ -1,5 +1,7 @@
 import { ApiError } from "./errors";
 import type { MarketDisputes, MarketWithSignals } from "./markets/types";
+import type { MarketsParams } from "./markets/search-params";
+import { toStringRecord } from "./utils";
 
 /**
  * Fetches a JSON resource and returns it typed as `T`.
@@ -30,8 +32,12 @@ export async function apiFetch<T>(
  * @returns An object containing the markets for the requested page and the cursor for the next page.
  * @throws {@link ApiError} When the response status is not ok.
  */
-export async function fetchMarkets(cursor?: string) {
-  return apiFetch<{ markets: MarketWithSignals[]; nextCursor: string }>(`/api/markets?cursor=${cursor ?? ""}`);
+export async function fetchMarkets(cursor?: string, options?: MarketsParams) {
+  const params = new URLSearchParams({
+    cursor: cursor ?? '',
+    ...toStringRecord(options ?? {}),
+  });
+  return apiFetch<{ markets: MarketWithSignals[]; nextCursor: string }>(`/api/markets?${params}`);
 }
 
 /**

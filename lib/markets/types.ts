@@ -1,4 +1,5 @@
 import type { Severity } from "../types"
+import { sortKeys } from "./constants"
 
 /** A single tradeable outcome within a {@link Market}. */
 export type Outcome = {
@@ -91,3 +92,9 @@ export type Signal = {
  * {@link Signal} if its condition is met, or `null` otherwise.
  */
 export type Rule = (market: Market) => Signal | null
+
+/**
+ * The set of field names by which markets can be sorted.
+ * Derived from {@link sortKeys} so the two stay in sync automatically.
+ */
+export type MarketSortKey = typeof sortKeys[number];

@@ -5,10 +5,10 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   const cursor = request.nextUrl.searchParams.get('cursor') || undefined;
-  const options = await loadMarketsSearchParams(request);
+  const options = loadMarketsSearchParams(request);
 
   try {
-    const data = await getMarkets(cursor, options)
+    const data = await getMarkets(options, cursor)
     return NextResponse.json(data)
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Failed to fetch from Polymarket'

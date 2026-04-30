@@ -35,6 +35,8 @@ Goal is to add more functionality to the app to improve decision making before m
 - **icons**: use icons from lucide-react library, avoid inline svg
 - **formatting**: use formatting utility functions located in `lib/utils.ts` file
 - **SOLID principles**: where possible, write reusable and maintanable code according to SOLID principles
+- **Hooks**: Don't reinvent what's already available in `usehooks-ts` library
+- **tsdoc**: Upon editing entitiy that's been documented with _tsdoc_, update documentation
 
 <!-- BEGIN:nextjs-agent-rules -->
 

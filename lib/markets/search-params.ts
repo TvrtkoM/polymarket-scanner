@@ -2,9 +2,10 @@ import {
   createLoader,
   createSearchParamsCache,
   parseAsInteger,
-  parseAsString,
-  type inferParserType,
-} from 'nuqs/server'
+  parseAsStringLiteral,
+  type inferParserType
+} from 'nuqs/server';
+import { sortKeys } from './constants';
 
 /**
  * nuqs parsers for markets list filter/sort params.
@@ -12,9 +13,8 @@ import {
  * directly into the API query without any name-mapping.
  */
 export const marketsSearchParsers = {
-  order: parseAsString.withDefault('volume24hrClob'),
-  liquidity_num_min: parseAsInteger.withDefault(1000),
-  tag_match: parseAsString.withDefault(''),
+  order: parseAsStringLiteral(sortKeys).withDefault('volume24hrClob'),
+  liquidity_num_min: parseAsInteger.withDefault(1000)
 }
 
 /** Typed shape of the markets filter/sort params, inferred from the parsers. */
@@ -26,10 +26,3 @@ export const marketsSearchParamsCache = createSearchParamsCache(marketsSearchPar
 /** For use in route handlers (no React cache context). */
 export const loadMarketsSearchParams = createLoader(marketsSearchParsers)
 
-/** Display labels for the sort options exposed in the UI. */
-export const SORT_OPTIONS: Record<string, string> = {
-  volume24hrClob: 'Most volume 24h',
-  volume1wkClob: 'Most volume 1wk',
-  liquidity: 'Most liquid',
-  endDate: 'Ending soon',
-}

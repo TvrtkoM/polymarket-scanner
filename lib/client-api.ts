@@ -29,7 +29,10 @@ export async function apiFetch<T>(
  * Fetches a paginated list of markets with their associated signals.
  *
  * @param cursor - Opaque cursor string identifying the next page. Omit or pass `undefined` to fetch the first page.
- * @returns An object containing the markets for the requested page and the cursor for the next page.
+ * @param options - Optional filter and sort parameters forwarded to the Polymarket API.
+ *   Keys match Polymarket's API parameter names exactly (`order`, `liquidity_num_min`).
+ * @returns An object with `markets` (the current page of {@link MarketWithSignals}) and
+ *   `nextCursor` (pass to the next call to advance the page).
  * @throws {@link ApiError} When the response status is not ok.
  */
 export async function fetchMarkets(cursor?: string, options?: MarketsParams) {

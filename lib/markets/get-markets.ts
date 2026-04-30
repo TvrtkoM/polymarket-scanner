@@ -1,13 +1,12 @@
 import "server-only";
 import { ApiError } from "../errors";
+import { parseWeiPrice, toStringRecord } from "../utils";
+import { DATA_API_URL, GAMMA_API_URL, marketsPageCount } from "./constants";
 import { normaliseMarket } from "./normalise";
 import { runRules } from "./rules";
-import { GAMMA_URL, marketsPageCount } from "./constants";
-import { parseWeiPrice, toStringRecord } from "../utils";
-import type { MarketDisputes, MarketWithSignals } from "./types";
 import type { MarketsParams } from "./search-params";
+import type { MarketDisputes, MarketWithSignals } from "./types";
 
-const DATA_API_URL = 'https://data-api.polymarket.com'
 
 /**
  * Fetches a paginated list of active, tradeable markets from the Polymarket API,
@@ -20,8 +19,8 @@ const DATA_API_URL = 'https://data-api.polymarket.com'
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
 export async function getMarkets(
-  cursor?: string,
-  options: MarketsParams = { order: 'volume24hrClob', liquidity_num_min: 1000, tag_match: '' }
+  options: MarketsParams = { order: 'volume24hrClob', liquidity_num_min: 1000 },
+  cursor?: string
 ): Promise<{ markets: MarketWithSignals[]; nextCursor: string }> {
   let params: Record<string, string> = {
     active: 'true',
@@ -38,7 +37,7 @@ export async function getMarkets(
   }
 
   const res = await fetch(
-    `${GAMMA_URL}/markets/keyset?${new URLSearchParams(params)}`,
+    `${GAMMA_API_URL}/markets/keyset?${new URLSearchParams(params)}`,
     {
       next: { revalidate: 60 }
     }
@@ -74,7 +73,7 @@ export async function getMarkets(
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
 export async function getMarket(slug: string): Promise<MarketWithSignals> {
-  const res = await fetch(`${GAMMA_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
+  const res = await fetch(`${GAMMA_API_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
 
   if (!res.ok) {
     throw new ApiError(`Polymarket API error`, res.status)

@@ -30,7 +30,7 @@ export async function getMarkets(
     accepting_orders: 'true',
     limit: marketsPageCount.toString(),
     ...toStringRecord(options),
-    ascending: options.order === 'endDateIso' ? 'true' : 'false',
+    ascending: options.order === 'endDate' ? 'true' : 'false',
   };
 
   if (cursor) {

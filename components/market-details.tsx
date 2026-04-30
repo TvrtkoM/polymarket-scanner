@@ -14,6 +14,7 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { SignalBadges } from "./signals";
 import { PolymarketsLink } from "./ui/polymarkets-link";
+import { Skeleton } from "./ui/skeleton";
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -88,14 +89,25 @@ function DisputeTimeline({ disputes }: { disputes: MarketDisputes }) {
   );
 }
 
-function MarketDetailsView({
-  market,
-  disputes
-}: {
-  market: MarketWithSignals;
-  disputes: MarketDisputes | null;
-}) {
+function DisputeTimelineSkeleton() {
+  return (
+    <div className="flex flex-col gap-3">
+      <Skeleton className="h-7 w-48" />
+      <Skeleton className="h-7 w-36" />
+    </div>
+  );
+}
+
+function MarketDetailsView({ market }: { market: MarketWithSignals }) {
   const isBinary = market.outcomes.length === 2;
+
+  const isDisputed = market.disputed && market.questionId != null;
+
+  const { data: disputes, isLoading: isLoadingDisputes } = useQuery({
+    queryKey: ["market-disputes", market.questionId],
+    queryFn: () => fetchMarketDisputes(market.questionId!),
+    enabled: isDisputed
+  });
 
   return (
     <div className="space-y-6">
@@ -245,10 +257,14 @@ function MarketDetailsView({
         </div>
       </section>
 
-      {disputes && (
+      {(isLoadingDisputes || disputes) && (
         <section className="border-t pt-6">
           <SectionHeading>Resolution Disputes</SectionHeading>
-          <DisputeTimeline disputes={disputes} />
+          {isLoadingDisputes ? (
+            <DisputeTimelineSkeleton />
+          ) : (
+            <DisputeTimeline disputes={disputes!} />
+          )}
         </section>
       )}
 
@@ -268,11 +284,5 @@ export function MarketDetails({ slug }: { slug: string }) {
     queryFn: () => fetchMarket(slug)
   });
 
-  const { data: disputes } = useQuery({
-    queryKey: ["market-disputes", market.questionId],
-    queryFn: () => fetchMarketDisputes(market.questionId!),
-    enabled: market.disputed && market.questionId !== null
-  });
-
-  return <MarketDetailsView market={market} disputes={disputes ?? null} />;
+  return <MarketDetailsView market={market} />;
 }

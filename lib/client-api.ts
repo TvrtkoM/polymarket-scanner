@@ -51,7 +51,7 @@ export async function fetchMarkets(cursor?: string, options?: MarketsParams) {
  * @throws {@link ApiError} When the response status is not ok.
  */
 export async function fetchMarket(slug: string) {
-  return apiFetch<MarketWithSignals>(`/api/market?slug=${slug}`)
+  return apiFetch<MarketWithSignals>(`/api/market/${slug}`)
 }
 
 /**
@@ -62,5 +62,5 @@ export async function fetchMarket(slug: string) {
  * @throws {@link ApiError} When the response status is not ok.
  */
 export async function fetchMarketDisputes(questionId: string) {
-  return apiFetch<MarketDisputes>(`/api/market/disputes?questionId=${questionId}`)
+  return apiFetch<MarketDisputes>(`/api/market/disputes/${questionId}`)
 }

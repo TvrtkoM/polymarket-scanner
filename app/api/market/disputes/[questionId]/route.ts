@@ -2,12 +2,8 @@ import { ApiError } from '@/lib/errors'
 import { getMarketDisputes } from '@/lib/markets/get-markets'
 import { type NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
-  const questionId = request.nextUrl.searchParams.get('questionId')
-
-  if (!questionId) {
-    return NextResponse.json({ error: 'questionId is required' }, { status: 400 })
-  }
+export async function GET(request: NextRequest, { params }: { params: Promise<{ questionId: string }> }) {
+  const { questionId } = await params
 
   try {
     const disputes = await getMarketDisputes(questionId)

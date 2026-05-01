@@ -5,31 +5,12 @@ import { marketsSearchParsers } from "@/lib/markets/search-params";
 import type { MarketWithSignals } from "@/lib/markets/types";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
+import { useColumnCount } from "@/lib/use-column-count";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { useQueryStates } from "nuqs";
 import { ErrorComponent } from "./error";
 import { MarketCard } from "./market-card";
 
-function getColCount() {
-  if (window.matchMedia("(min-width: 1024px)").matches) return 3;
-  if (window.matchMedia("(min-width: 640px)").matches) return 2;
-  return 1;
-}
-
-function subscribeToColCount(cb: () => void) {
-  const smQuery = window.matchMedia("(min-width: 640px)");
-  const lgQuery = window.matchMedia("(min-width: 1024px)");
-  smQuery.addEventListener("change", cb);
-  lgQuery.addEventListener("change", cb);
-  return () => {
-    smQuery.removeEventListener("change", cb);
-    lgQuery.removeEventListener("change", cb);
-  };
-}
-
-function useColumnCount() {
-  return useSyncExternalStore(subscribeToColCount, getColCount, () => 1);
-}
 
 type VirtualListProps = {
   markets: MarketWithSignals[];

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
+import { AlertPoller } from "@/components/alert-poller";
+import { Header } from "@/components/header";
 import Providers from "./providers";
 import "./globals.css";
 
@@ -29,7 +32,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+        <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <Providers>
+            <AlertPoller />
+            <Header />
+            {children}
+          </Providers>
+          <Toaster richColors closeButton />
+        </main>
       </body>
     </html>
   );

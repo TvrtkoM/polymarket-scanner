@@ -17,6 +17,7 @@ import Link from "next/link";
 import { SignalBadges } from "./signals";
 import { HorizontalScroller } from "./ui/horizontal-scroller";
 import { PolymarketsLink } from "./ui/polymarkets-link";
+import { WatchlistStar } from "./watchlist-star";
 
 export function MarketCard({
   market,
@@ -89,6 +90,7 @@ export function MarketCard({
             )}
           </div>
 
+          <WatchlistStar market={market} />
           <PolymarketsLink slug={market.slug} />
         </div>
       </div>

@@ -64,3 +64,18 @@ export async function fetchMarket(slug: string) {
 export async function fetchMarketDisputes(questionId: string) {
   return apiFetch<MarketDisputes>(`/api/market/disputes/${questionId}`)
 }
+
+/**
+ * Fetches a batch of markets by their Polymarket ids from the internal API route.
+ * Returns only the markets that were found; unknown ids are silently omitted.
+ *
+ * @param ids - Array of Polymarket market ids to fetch.
+ * @returns Array of {@link MarketWithSignals} for found ids.
+ * @throws {@link ApiError} When the response status is not ok.
+ */
+export async function fetchMarketsByIds(ids: string[]) {
+  if (ids.length === 0) return []
+  const params = new URLSearchParams()
+  ids.forEach((id) => params.append('id', id))
+  return apiFetch<MarketWithSignals[]>(`/api/markets/by-ids?${params}`)
+}

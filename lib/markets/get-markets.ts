@@ -91,6 +91,40 @@ export async function getMarket(slug: string): Promise<MarketWithSignals> {
 }
 
 /**
+ * Fetches a batch of markets by their Polymarket ids.
+ * Uses repeated `id` query params since the keyset endpoint does not support
+ * comma-separated values. `limit` is set to 1000 (the documented maximum) so
+ * all requested markets are returned in a single response with no pagination.
+ * Uses `cache: 'no-store'` so watchlist polling always sees fresh prices.
+ *
+ * @param ids - Array of Polymarket market ids to fetch.
+ * @returns Array of normalised {@link MarketWithSignals} for found ids.
+ * @throws {@link ApiError} When the Polymarket API responds with a non-2xx status.
+ */
+export async function getMarketsByIds(ids: string[]): Promise<MarketWithSignals[]> {
+  if (ids.length === 0) return []
+
+  const params = new URLSearchParams({ limit: '1000' })
+  ids.forEach((id) => params.append('id', id))
+
+  const res = await fetch(
+    `${GAMMA_API_URL}/markets/keyset?${params}`,
+    { cache: 'no-store' },
+  )
+
+  if (!res.ok) {
+    throw new ApiError(`Polymarket API error`, res.status)
+  }
+
+  const raw: Record<string, unknown>[] = await res.json()
+
+  return raw
+    .map((m) => normaliseMarket(m))
+    .filter((m) => m != null)
+    .map((market) => ({ ...market, signals: runRules(market) }))
+}
+
+/**
  * Fetches UMA dispute resolution data for a single market by its question ID.
  *
  * @param questionId - The UMA question ID for the market.

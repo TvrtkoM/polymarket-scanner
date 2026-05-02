@@ -29,7 +29,7 @@ export function evaluateRule(
 ): EvaluateResult {
   if (state?.status === 'fired') return { fired: false }
 
-  switch (rule.kind) {
+  switch (rule.ruleId) {
     case 'price_cross': {
       const outcome = market.outcomes.find((o) => o.label === rule.outcomeLabel)
       if (!outcome) return { fired: false }

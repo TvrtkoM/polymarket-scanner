@@ -1,4 +1,4 @@
-import type { MarketSortKey } from "./types"
+import type { MarketSortKey, RuleId } from "./types"
 
 /** Polymarket Gamma API base url */
 export const GAMMA_API_URL = 'https://gamma-api.polymarket.com'
@@ -19,3 +19,12 @@ export const SORT_OPTIONS: Record<MarketSortKey, string> = {
   liquidity: 'Most liquid',
   endDate: 'Ending soon',
 }
+
+/** RuleId / label pairs for display in UI */
+export const RULES_LABELS: Record<RuleId, string> = {
+  price_cross: "Price crosses threshold",
+  price_move_24h: "Price move in 24h",
+  volume_24h: "Volume in 24h",
+  near_resolution: "Near resolution",
+  tossup: "Tossup (too close to call)"
+} as const;

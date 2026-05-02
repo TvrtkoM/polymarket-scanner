@@ -1,16 +1,18 @@
+import type { RuleId } from "../markets/types";
+
 /** The discriminated kind of an {@link AlertRule}. */
-export type AlertRuleKind = 'price_cross' | 'price_move_24h' | 'volume_24h' | 'near_resolution'
+export type AlertRuleId = Exclude<RuleId, 'tossup'>;
 
 /**
  * A single alert rule attached to a watched market.
- * Discriminated union on `kind` keeps the evaluator a clean switch and makes
- * adding new kinds a localised change.
+ * Discriminated union on `ruleId` keeps the evaluator a clean switch and makes
+ * adding new rules a localised change.
  */
 export type AlertRule =
-  | { id: string; kind: 'price_cross'; outcomeLabel: string; direction: 'above' | 'below'; threshold: number }
-  | { id: string; kind: 'price_move_24h'; absChange: number }
-  | { id: string; kind: 'volume_24h'; threshold: number }
-  | { id: string; kind: 'near_resolution'; daysLeft: number }
+  | { id: string; ruleId: 'price_cross'; outcomeLabel: string; direction: 'above' | 'below'; threshold: number }
+  | { id: string; ruleId: 'price_move_24h'; absChange: number }
+  | { id: string; ruleId: 'volume_24h'; threshold: number }
+  | { id: string; ruleId: 'near_resolution'; daysLeft: number }
 
 /**
  * Tracks whether a rule has fired and when.

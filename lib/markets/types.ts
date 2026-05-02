@@ -75,12 +75,15 @@ export type WithSignals = {
 /** A {@link Market} with signals attached from the rules engine. */
 export type MarketWithSignals = Market & WithSignals
 
+/** Machine-readable identifier for each rule */
+export type RuleId = 'price_cross' | 'price_move_24h' | 'volume_24h' | 'near_resolution' | 'tossup';
+
 /** A signal emitted by a {@link Rule} when its condition is satisfied for a market. */
 export type Signal = {
   /** ID of the {@link Market} that triggered the signal. */
   marketId: string
   /** Machine-readable rule name that produced this signal. */
-  rule: string
+  ruleId: RuleId
   /** Human-readable explanation of why the signal fired. */
   description: string
   /** Urgency level of the signal. */

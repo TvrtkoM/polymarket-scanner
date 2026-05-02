@@ -6,7 +6,7 @@ import { Ref } from "react";
 function SignalBadge({ signal }: { signal: Signal }) {
   return (
     <span
-      title={signal.rule}
+      title={signal.ruleId}
       className={cn(
         "rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0",
         severityVariants({ severity: signal.severity })

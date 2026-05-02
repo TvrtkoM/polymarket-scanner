@@ -1,9 +1,9 @@
 "use client";
 
-import { useWatchlist } from "@/lib/watchlist/hooks";
 import type { Market } from "@/lib/markets/types";
 import { cn } from "@/lib/utils";
-import { Star } from "lucide-react";
+import { useWatchlist } from "@/lib/watchlist/hooks";
+import { Bell } from "lucide-react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
 
@@ -45,7 +45,7 @@ export function WatchlistStar({ market, className }: WatchlistStarProps) {
         className
       )}
     >
-      <Star className={cn("size-4", watched && "fill-current")} />
+      <Bell className={cn("size-4", watched && "fill-current")} />
     </Button>
   );
 }

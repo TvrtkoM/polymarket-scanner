@@ -116,9 +116,9 @@ export async function getMarketsByIds(ids: string[]): Promise<MarketWithSignals[
     throw new ApiError(`Polymarket API error`, res.status)
   }
 
-  const raw: Record<string, unknown>[] = await res.json()
+  const raw: { markets: Record<string, unknown>[] } = await res.json()
 
-  return raw
+  return raw.markets
     .map((m) => normaliseMarket(m))
     .filter((m) => m != null)
     .map((market) => ({ ...market, signals: runRules(market) }))

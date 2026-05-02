@@ -6,8 +6,7 @@ import { formatCurrency, formatDate, formatSignedPercent } from "@/lib/utils";
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <span>
-      {label}:{" "}
-      <span className="font-mono font-medium">{value}</span>
+      {label}: <span className="font-mono font-medium">{value}</span>
     </span>
   );
 }
@@ -33,7 +32,7 @@ export function MarketCard({
   const changePositive = change >= 0;
 
   return (
-    <article className="flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+    <article className="flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow grow">
       {market.image && (
         <div className="relative h-36 w-full bg-muted">
           <Image

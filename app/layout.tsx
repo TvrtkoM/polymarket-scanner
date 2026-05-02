@@ -31,15 +31,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <Providers>
-            <AlertPoller />
-            <Header />
-            {children}
-          </Providers>
-          <Toaster richColors closeButton />
-        </main>
+      <body className="min-h-full flex flex-col mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Providers>
+          <AlertPoller />
+          <Header />
+          <main className="pt-6">{children}</main>
+        </Providers>
+        <Toaster richColors closeButton />
       </body>
     </html>
   );

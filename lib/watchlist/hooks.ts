@@ -38,10 +38,9 @@ export function useWatchlist() {
       setEntries((prev) => {
         const entry = prev.find((e) => e.marketId === marketId)
         if (!entry) return prev
-        const ruleIds = new Set(entry.alertRules.map((r) => r.id))
         setAlertState((s) => {
           const next = { ...s }
-          ruleIds.forEach((id) => delete next[id])
+          entry.alertRules.forEach((e) => delete next[e.id])
           return next
         })
         return prev.filter((e) => e.marketId !== marketId)

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
-import { AlertPoller } from "@/components/alert-poller";
+import { AlertPoller } from "@/components/alerts/alert-poller";
 import { Header } from "@/components/header";
 import Providers from "./providers";
 import "./globals.css";

@@ -14,9 +14,9 @@ import Decimal from "decimal.js";
 import Image from "next/image";
 import Link from "next/link";
 import { SignalBadges } from "./signals";
-import { HorizontalScroller } from "./ui/horizontal-scroller";
-import { PolymarketsLink } from "./ui/polymarkets-link";
-import { WatchlistStar } from "./watchlist-star";
+import { HorizontalScroller } from "../ui/horizontal-scroller";
+import { PolymarketsLink } from "../ui/polymarkets-link";
+import { WatchlistStar } from "../watchlist/watchlist-star";
 
 export function MarketCard({
   market,

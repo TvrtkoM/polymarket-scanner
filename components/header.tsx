@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCenter } from "./alert-center";
+import { AlertCenter } from "./alerts/alert-center";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";

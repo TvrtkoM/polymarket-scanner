@@ -1,4 +1,4 @@
-import { MarketDetails } from "@/components/market-details";
+import { MarketDetails } from "@/components/markets/market-details";
 import { getMarket } from "@/lib/markets/get-markets";
 import { getQueryClient } from "@/lib/query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";

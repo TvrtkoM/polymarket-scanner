@@ -4,9 +4,9 @@ import { fetchMarketsByIds } from "@/lib/client-api";
 import { useWatchlist } from "@/lib/watchlist/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useSyncExternalStore } from "react";
-import { AlertRuleList } from "./alert-rule-list";
-import { MarketCard } from "./market-card";
-import { GridVirtualizer } from "./ui/grid-virtualizer";
+import { AlertRuleList } from "../alerts/alert-rule-list";
+import { MarketCard } from "../markets/market-card";
+import { GridVirtualizer } from "../ui/grid-virtualizer";
 
 export function WatchlistList() {
   const { entries } = useWatchlist();

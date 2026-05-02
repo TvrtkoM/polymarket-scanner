@@ -1,5 +1,5 @@
-import { MarketsFilters } from "@/components/markets-filters";
-import { MarketsList } from "@/components/markets-list";
+import { MarketsFilters } from "@/components/markets/markets-filters";
+import { MarketsList } from "@/components/markets/markets-list";
 import { getMarkets } from "@/lib/markets/get-markets";
 import { marketsSearchParamsCache } from "@/lib/markets/search-params";
 import { getQueryClient } from "@/lib/query-client";

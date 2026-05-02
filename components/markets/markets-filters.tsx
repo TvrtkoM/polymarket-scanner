@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import { useQueryStates } from "nuqs";
 import { useCallback, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { SORT_OPTIONS } from "@/lib/markets/constants";
 
 const inputClass =

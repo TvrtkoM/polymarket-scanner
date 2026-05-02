@@ -6,7 +6,7 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useQueryStates } from "nuqs";
 import { useSyncExternalStore } from "react";
 import { MarketCard } from "./market-card";
-import { GridVirtualizer } from "./ui/grid-virtualizer";
+import { GridVirtualizer } from "../ui/grid-virtualizer";
 
 export function MarketsList() {
   const [{ order, liquidity_num_min }] = useQueryStates(marketsSearchParsers);

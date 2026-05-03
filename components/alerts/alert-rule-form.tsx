@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { RULES_LABELS } from "@/lib/markets/constants";
 import type { Market } from "@/lib/markets/types";
-import { useAlertRules } from "@/lib/watchlist/hooks";
+import { useAlertRules, useWatchlist } from "@/lib/watchlist/hooks";
 import type { AlertRule, AlertRuleSlug } from "@/lib/watchlist/types";
 import { BellPlus } from "lucide-react";
 import { useState } from "react";
@@ -104,6 +104,8 @@ export function AlertRuleForm({
   onCancel?: () => void;
 }) {
   const { addRule } = useAlertRules(market.id);
+  const { isWatched, add } = useWatchlist();
+
   const [form, setForm] = useState<FormState>(() =>
     defaultForm("price_cross", market.outcomes)
   );
@@ -113,7 +115,15 @@ export function AlertRuleForm({
 
   const handleSubmit = () => {
     const parsed = parseForm(form);
+
     if (!parsed) return;
+    if (!isWatched(market.id)) {
+      add({
+        marketId: market.id,
+        slug: market.slug,
+        question: market.question
+      });
+    }
     addRule(parsed);
     setForm(defaultForm("price_cross", market.outcomes));
     onSubmit?.();

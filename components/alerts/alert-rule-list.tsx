@@ -81,6 +81,8 @@ function AlertRuleRow({ rule, state, onRemove, onReset }: AlertRuleRowProps) {
 
 export function AlertRuleList({ market }: { market: Market }) {
   const { rules, removeRule, resetRule } = useAlertRules(market.id);
+  const { remove: removeWathlistItem } = useWatchlist();
+
   const alertState = useAtomValue(alertStateAtom);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -91,7 +93,13 @@ export function AlertRuleList({ market }: { market: Market }) {
           key={rule.id}
           rule={rule}
           state={alertState[rule.id]}
-          onRemove={removeRule}
+          onRemove={(id) => {
+            const isLast = rules.length === 1;
+            removeRule(id);
+            if (isLast) {
+              removeWathlistItem(market.id);
+            }
+          }}
           onReset={resetRule}
         />
       ))}

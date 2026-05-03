@@ -11,7 +11,7 @@ import { alertStateAtom } from "@/lib/watchlist/atoms";
 import { AlertRuleForm } from "./alert-rule-form";
 
 function ruleDescription(rule: AlertRule): string {
-  switch (rule.ruleId) {
+  switch (rule.ruleSlug) {
     case "price_cross":
       return `${rule.outcomeLabel} price ${rule.direction} ${(rule.threshold * 100).toFixed(0)}%`;
     case "price_move_24h":

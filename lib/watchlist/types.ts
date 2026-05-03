@@ -1,7 +1,7 @@
-import type { RuleId } from "../markets/types";
+import type { RuleSlug } from "../markets/types";
 
 /** The discriminated kind of an {@link AlertRule}. */
-export type AlertRuleId = Exclude<RuleId, 'tossup'>;
+export type AlertRuleSlug = Exclude<RuleSlug, 'tossup'>;
 
 /**
  * A single alert rule attached to a watched market.
@@ -9,10 +9,10 @@ export type AlertRuleId = Exclude<RuleId, 'tossup'>;
  * adding new rules a localised change.
  */
 export type AlertRule =
-  | { id: string; ruleId: 'price_cross'; outcomeLabel: string; direction: 'above' | 'below'; threshold: number }
-  | { id: string; ruleId: 'price_move_24h'; absChange: number }
-  | { id: string; ruleId: 'volume_24h'; threshold: number }
-  | { id: string; ruleId: 'near_resolution'; daysLeft: number }
+  | { id: string; ruleSlug: 'price_cross'; outcomeLabel: string; direction: 'above' | 'below'; threshold: number }
+  | { id: string; ruleSlug: 'price_move_24h'; absChange: number }
+  | { id: string; ruleSlug: 'volume_24h'; threshold: number }
+  | { id: string; ruleSlug: 'near_resolution'; daysLeft: number }
 
 /**
  * Tracks whether a rule has fired and when.

@@ -20,7 +20,7 @@ import {
 import { RULES_LABELS } from "@/lib/markets/constants";
 import type { Market } from "@/lib/markets/types";
 import { useAlertRules } from "@/lib/watchlist/hooks";
-import type { AlertRule, AlertRuleId } from "@/lib/watchlist/types";
+import type { AlertRule, AlertRuleSlug } from "@/lib/watchlist/types";
 import { BellPlus } from "lucide-react";
 import { useCallback, useState } from "react";
 
@@ -30,33 +30,33 @@ function randomId() {
 
 type FormState =
   | {
-      ruleId: "price_cross";
+      ruleSlug: "price_cross";
       outcomeLabel: string;
       direction: "above" | "below";
       threshold: string;
     }
-  | { ruleId: "price_move_24h"; absChange: string }
-  | { ruleId: "volume_24h"; threshold: string }
-  | { ruleId: "near_resolution"; daysLeft: string };
+  | { ruleSlug: "price_move_24h"; absChange: string }
+  | { ruleSlug: "volume_24h"; threshold: string }
+  | { ruleSlug: "near_resolution"; daysLeft: string };
 
 function defaultForm(
-  ruleId: AlertRuleId,
+  ruleSlug: AlertRuleSlug,
   outcomes: Market["outcomes"]
 ): FormState {
-  switch (ruleId) {
+  switch (ruleSlug) {
     case "price_cross":
       return {
-        ruleId,
+        ruleSlug,
         outcomeLabel: outcomes[0]?.label ?? "Yes",
         direction: "above",
         threshold: "0.6"
       };
     case "price_move_24h":
-      return { ruleId, absChange: "0.05" };
+      return { ruleSlug, absChange: "0.05" };
     case "volume_24h":
-      return { ruleId, threshold: "500000" };
+      return { ruleSlug, threshold: "500000" };
     case "near_resolution":
-      return { ruleId, daysLeft: "3" };
+      return { ruleSlug, daysLeft: "3" };
   }
 }
 
@@ -64,13 +64,13 @@ const { tossup: _, ...ALERT_RULES_LABELS } = RULES_LABELS;
 
 function parseForm(form: FormState): AlertRule | null {
   const id = randomId();
-  switch (form.ruleId) {
+  switch (form.ruleSlug) {
     case "price_cross": {
       const t = parseFloat(form.threshold);
       if (isNaN(t) || t < 0 || t > 1) return null;
       return {
         id,
-        ruleId: "price_cross",
+        ruleSlug: "price_cross",
         outcomeLabel: form.outcomeLabel,
         direction: form.direction,
         threshold: t
@@ -79,17 +79,17 @@ function parseForm(form: FormState): AlertRule | null {
     case "price_move_24h": {
       const v = parseFloat(form.absChange);
       if (isNaN(v) || v <= 0 || v > 1) return null;
-      return { id, ruleId: "price_move_24h", absChange: v };
+      return { id, ruleSlug: "price_move_24h", absChange: v };
     }
     case "volume_24h": {
       const v = parseFloat(form.threshold);
       if (isNaN(v) || v < 0) return null;
-      return { id, ruleId: "volume_24h", threshold: v };
+      return { id, ruleSlug: "volume_24h", threshold: v };
     }
     case "near_resolution": {
       const v = parseInt(form.daysLeft, 10);
       if (isNaN(v) || v < 1) return null;
-      return { id, ruleId: "near_resolution", daysLeft: v };
+      return { id, ruleSlug: "near_resolution", daysLeft: v };
     }
   }
 }
@@ -106,7 +106,7 @@ export function AlertRuleForm({ market }: AlertRuleFormProps) {
   );
 
   const setRuleId = useCallback(
-    (ruleId: AlertRuleId) => setForm(defaultForm(ruleId, market.outcomes)),
+    (ruleId: AlertRuleSlug) => setForm(defaultForm(ruleId, market.outcomes)),
     [market.outcomes]
   );
 
@@ -135,23 +135,25 @@ export function AlertRuleForm({ market }: AlertRuleFormProps) {
           <div className="space-y-1.5">
             <Label>Alert type</Label>
             <Select
-              value={form.ruleId}
-              onValueChange={(v) => setRuleId(v as AlertRuleId)}
+              value={form.ruleSlug}
+              onValueChange={(v) => setRuleId(v as AlertRuleSlug)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {(Object.keys(ALERT_RULES_LABELS) as AlertRuleId[]).map((k) => (
-                  <SelectItem key={k} value={k}>
-                    {ALERT_RULES_LABELS[k]}
-                  </SelectItem>
-                ))}
+                {(Object.keys(ALERT_RULES_LABELS) as AlertRuleSlug[]).map(
+                  (k) => (
+                    <SelectItem key={k} value={k}>
+                      {ALERT_RULES_LABELS[k]}
+                    </SelectItem>
+                  )
+                )}
               </SelectContent>
             </Select>
           </div>
 
-          {form.ruleId === "price_cross" && (
+          {form.ruleSlug === "price_cross" && (
             <>
               <div className="space-y-1.5">
                 <Label>Outcome</Label>
@@ -204,7 +206,7 @@ export function AlertRuleForm({ market }: AlertRuleFormProps) {
             </>
           )}
 
-          {form.ruleId === "price_move_24h" && (
+          {form.ruleSlug === "price_move_24h" && (
             <div className="space-y-1.5">
               <Label>Minimum absolute change (0–1, e.g. 0.05 = 5%)</Label>
               <Input
@@ -220,7 +222,7 @@ export function AlertRuleForm({ market }: AlertRuleFormProps) {
             </div>
           )}
 
-          {form.ruleId === "volume_24h" && (
+          {form.ruleSlug === "volume_24h" && (
             <div className="space-y-1.5">
               <Label>Volume threshold (USD)</Label>
               <Input
@@ -235,7 +237,7 @@ export function AlertRuleForm({ market }: AlertRuleFormProps) {
             </div>
           )}
 
-          {form.ruleId === "near_resolution" && (
+          {form.ruleSlug === "near_resolution" && (
             <div className="space-y-1.5">
               <Label>Days until resolution</Label>
               <Input

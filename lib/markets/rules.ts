@@ -16,7 +16,7 @@ const significantPriceMove: Rule = (market) => {
   if (Math.abs(market.oneDayPriceChange) >= 0.1) {
     return {
       marketId: market.id,
-      ruleId: 'price_move_24h',
+      ruleSlug: 'price_move_24h',
       description: `Price moved ${(market.oneDayPriceChange * 100).toFixed(1)}% in 24h`,
       severity: Math.abs(market.oneDayPriceChange) >= 0.2 ? 'high' : 'medium',
     }
@@ -39,7 +39,7 @@ const highVolumeSurge: Rule = (market) => {
   if (market.volume24h > 500_000) {
     return {
       marketId: market.id,
-      ruleId: 'volume_24h',
+      ruleSlug: 'volume_24h',
       description: `${formatCurrency(market.volume24h)} volume in 24h`,
       severity: market.volume24h > 1_000_000 ? 'high' : 'medium',
     }
@@ -66,7 +66,7 @@ const nearResolution: Rule = (market) => {
   if (daysLeft <= 7 && daysLeft > 0) {
     return {
       marketId: market.id,
-      ruleId: 'near_resolution',
+      ruleSlug: 'near_resolution',
       description: `Resolves in ${daysLeft.toFixed(0)} day(s)`,
       severity: daysLeft <= 2 ? 'high' : 'low',
     }
@@ -93,7 +93,7 @@ const tossupMarket: Rule = (market) => {
   if (price >= 0.4 && price <= 0.6) {
     return {
       marketId: market.id,
-      ruleId: 'tossup',
+      ruleSlug: 'tossup',
       description: `Yes at ${(price * 100).toFixed(0)}% — too close to call`,
       severity: 'low',
     }

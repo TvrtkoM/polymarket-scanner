@@ -22,7 +22,7 @@ import type { Market } from "@/lib/markets/types";
 import { useAlertRules } from "@/lib/watchlist/hooks";
 import type { AlertRule, AlertRuleSlug } from "@/lib/watchlist/types";
 import { BellPlus } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 function randomId() {
   return Math.random().toString(36).slice(2, 10);
@@ -105,18 +105,16 @@ export function AlertRuleForm({ market }: AlertRuleFormProps) {
     defaultForm("price_cross", market.outcomes)
   );
 
-  const setRuleId = useCallback(
-    (ruleId: AlertRuleSlug) => setForm(defaultForm(ruleId, market.outcomes)),
-    [market.outcomes]
-  );
+  const setRuleId = (ruleId: AlertRuleSlug) =>
+    setForm(defaultForm(ruleId, market.outcomes));
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     const parsed = parseForm(form);
     if (!parsed) return;
     addRule(parsed);
     setOpen(false);
     setForm(defaultForm("price_cross", market.outcomes));
-  }, [form, addRule, market.outcomes]);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

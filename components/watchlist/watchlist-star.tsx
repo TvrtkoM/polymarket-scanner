@@ -4,7 +4,6 @@ import type { Market } from "@/lib/markets/types";
 import { cn } from "@/lib/utils";
 import { useWatchlist } from "@/lib/watchlist/hooks";
 import { Bell } from "lucide-react";
-import { useCallback } from "react";
 import { Button } from "../ui/button";
 
 type WatchlistStarProps = {
@@ -20,7 +19,7 @@ export function WatchlistStar({ market, className }: WatchlistStarProps) {
   const { isWatched, add, remove } = useWatchlist();
   const watched = isWatched(market.id);
 
-  const toggle = useCallback(() => {
+  const toggle = () => {
     if (watched) {
       remove(market.id);
     } else {
@@ -30,7 +29,7 @@ export function WatchlistStar({ market, className }: WatchlistStarProps) {
         question: market.question
       });
     }
-  }, [watched, market, add, remove]);
+  };
 
   return (
     <Button

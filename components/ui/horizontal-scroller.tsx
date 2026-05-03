@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState, useCallback, useEffect, Ref } from "react";
+import { Ref, useEffect, useRef, useState } from "react";
 
 export function HorizontalScroller<E extends HTMLElement>({
   children
@@ -10,14 +10,13 @@ export function HorizontalScroller<E extends HTMLElement>({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const updateArrows = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 0);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
-  }, []);
-
   useEffect(() => {
+    const updateArrows = () => {
+      const el = scrollRef.current;
+      if (!el) return;
+      setCanScrollLeft(el.scrollLeft > 0);
+      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    };
     const el = scrollRef.current;
     if (!el) return;
     updateArrows();
@@ -28,7 +27,7 @@ export function HorizontalScroller<E extends HTMLElement>({
       el.removeEventListener("scroll", updateArrows);
       ro.disconnect();
     };
-  }, [updateArrows]);
+  }, []);
 
   const scroll = (dir: "left" | "right") => {
     const el = scrollRef.current;

@@ -3,7 +3,7 @@
 import type { Market } from "@/lib/markets/types";
 import { cn } from "@/lib/utils";
 import { useWatchlist } from "@/lib/watchlist/hooks";
-import { Bell } from "lucide-react";
+import { BellPlus } from "lucide-react";
 import { Button } from "../ui/button";
 
 type WatchlistStarProps = {
@@ -44,7 +44,7 @@ export function WatchlistStar({ market, className }: WatchlistStarProps) {
         className
       )}
     >
-      <Bell className={cn("size-4", watched && "fill-current")} />
+      <BellPlus className={cn("size-4", watched && "fill-current")} />
     </Button>
   );
 }

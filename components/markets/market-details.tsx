@@ -12,7 +12,7 @@ import {
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
-import { AlertRuleList } from "../alerts/alert-rule-list";
+import { AlertRuleListSection } from "../alerts/alert-rule-list";
 import { PolymarketsLink } from "../ui/polymarkets-link";
 import { SectionHeading } from "../ui/section-heading";
 import { Skeleton } from "../ui/skeleton";
@@ -273,7 +273,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         </div>
       )}
 
-      <AlertRuleList market={market} />
+      <AlertRuleListSection market={market} />
     </div>
   );
 }

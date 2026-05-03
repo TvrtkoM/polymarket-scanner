@@ -78,36 +78,37 @@ function AlertRuleRow({ rule, state, onRemove, onReset }: AlertRuleRowProps) {
   );
 }
 
-type AlertRuleListProps = {
-  market: Market;
-};
-
-export function AlertRuleList({ market }: AlertRuleListProps) {
+export function AlertRuleList({ market }: { market: Market }) {
   const { rules, removeRule, resetRule } = useAlertRules(market.id);
   const alertState = useAtomValue(alertStateAtom);
+
+  return (
+    <div className="flex flex-col gap-1.5 px-1">
+      {rules.map((rule) => (
+        <AlertRuleRow
+          key={rule.id}
+          rule={rule}
+          state={alertState[rule.id]}
+          onRemove={removeRule}
+          onReset={resetRule}
+        />
+      ))}
+      {market && <AlertRuleForm market={market} />}
+    </div>
+  );
+}
+
+export function AlertRuleListSection({ market }: { market: Market }) {
   const { isWatched } = useWatchlist();
 
   if (!isWatched(market.id)) {
     return null;
   }
 
-  if (rules.length === 0 && !market) return null;
-
   return (
-    <div className="border-t pt-6">
+    <section className="border-t pt-6">
       <SectionHeading>Alert rules</SectionHeading>
-      <div className="flex flex-col gap-1.5 px-1">
-        {rules.map((rule) => (
-          <AlertRuleRow
-            key={rule.id}
-            rule={rule}
-            state={alertState[rule.id]}
-            onRemove={removeRule}
-            onReset={resetRule}
-          />
-        ))}
-        {market && <AlertRuleForm market={market} />}
-      </div>
-    </div>
+      <AlertRuleList market={market} />
+    </section>
   );
 }

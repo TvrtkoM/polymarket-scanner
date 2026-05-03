@@ -95,7 +95,7 @@ function parseForm(form: FormState): AlertRule | null {
 }
 
 type AlertRuleFormProps = {
-  market: Pick<Market, "id" | "outcomes">;
+  market: Market;
 };
 
 export function AlertRuleForm({ market }: AlertRuleFormProps) {

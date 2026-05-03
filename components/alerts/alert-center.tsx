@@ -32,7 +32,7 @@ export function AlertCenter() {
         >
           <Bell className="size-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white leading-none">
+            <span className="absolute -top-0.5 -left-0.5 flex size-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white leading-none">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}

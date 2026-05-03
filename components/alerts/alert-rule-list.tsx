@@ -8,8 +8,9 @@ import { useAlertRules, useWatchlist } from "@/lib/watchlist/hooks";
 import type { AlertRule, AlertRuleState } from "@/lib/watchlist/types";
 import { useAtomValue } from "jotai";
 import { RefreshCw, Trash2 } from "lucide-react";
-import { AlertRuleForm } from "./alert-rule-form";
+import { useState } from "react";
 import { SectionHeading } from "../ui/section-heading";
+import { AddAlertButton, AlertRuleDialog } from "./alert-rule-form";
 
 function ruleDescription(rule: AlertRule): string {
   switch (rule.ruleSlug) {
@@ -81,6 +82,7 @@ function AlertRuleRow({ rule, state, onRemove, onReset }: AlertRuleRowProps) {
 export function AlertRuleList({ market }: { market: Market }) {
   const { rules, removeRule, resetRule } = useAlertRules(market.id);
   const alertState = useAtomValue(alertStateAtom);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-1.5 px-1">
@@ -93,7 +95,12 @@ export function AlertRuleList({ market }: { market: Market }) {
           onReset={resetRule}
         />
       ))}
-      {market && <AlertRuleForm market={market} />}
+      <AddAlertButton onClick={() => setDialogOpen(true)} />
+      <AlertRuleDialog
+        market={market}
+        onOpenChange={setDialogOpen}
+        open={dialogOpen}
+      />
     </div>
   );
 }

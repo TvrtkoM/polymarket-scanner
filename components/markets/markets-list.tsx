@@ -1,12 +1,12 @@
 "use client";
 
 import { fetchMarkets } from "@/lib/client-api";
+import { useIsMounted } from "@/lib/hooks";
 import { marketsSearchParsers } from "@/lib/markets/search-params";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useQueryStates } from "nuqs";
-import { useSyncExternalStore } from "react";
-import { MarketCard } from "./market-card";
 import { GridVirtualizer } from "../ui/grid-virtualizer";
+import { MarketCard } from "./market-card";
 
 export function MarketsList() {
   const [{ order, liquidity_num_min }] = useQueryStates(marketsSearchParsers);
@@ -21,11 +21,7 @@ export function MarketsList() {
       getNextPageParam: (lastPage) => lastPage.nextCursor
     });
 
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  const mounted = useIsMounted();
 
   const markets = data.pages.flatMap((p) => p.markets);
 

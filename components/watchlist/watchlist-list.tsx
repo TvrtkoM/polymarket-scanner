@@ -1,9 +1,9 @@
 "use client";
 
 import { fetchMarketsByIds } from "@/lib/client-api";
+import { useIsMounted } from "@/lib/hooks";
 import { useWatchlist } from "@/lib/watchlist/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { useSyncExternalStore } from "react";
 import { AlertRuleList } from "../alerts/alert-rule-list";
 import { MarketCard } from "../markets/market-card";
 import { GridVirtualizer } from "../ui/grid-virtualizer";
@@ -21,11 +21,7 @@ export function WatchlistList() {
     staleTime: 25_000
   });
 
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  const mounted = useIsMounted();
 
   if (entries.length === 0 && mounted) {
     return (
@@ -48,7 +44,7 @@ export function WatchlistList() {
             market={item}
             imagePriority={rowIndex === 0 && i < cols}
           />
-          <AlertRuleList marketId={item.id} market={item} />
+          <AlertRuleList market={item} />
         </>
       )}
       itemKey="id"

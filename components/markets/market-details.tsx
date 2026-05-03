@@ -1,11 +1,7 @@
 "use client";
 
 import { fetchMarket, fetchMarketDisputes } from "@/lib/client-api";
-import type {
-  Market,
-  MarketDisputes,
-  MarketWithSignals
-} from "@/lib/markets/types";
+import type { MarketDisputes, MarketWithSignals } from "@/lib/markets/types";
 import {
   cn,
   formatCurrency,
@@ -13,7 +9,6 @@ import {
   formatPrice,
   formatSigned
 } from "@/lib/utils";
-import { useWatchlist } from "@/lib/watchlist/hooks";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";

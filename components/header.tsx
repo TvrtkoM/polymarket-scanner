@@ -4,6 +4,7 @@ import { AlertCenter } from "./alerts/alert-center";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useIsMounted } from "@/lib/hooks";
 
 const NAV_LINKS = [
   { href: "/markets", label: "Markets" },
@@ -12,6 +13,8 @@ const NAV_LINKS = [
 
 export function Header() {
   const pathname = usePathname();
+
+  const isMounted = useIsMounted();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -33,7 +36,7 @@ export function Header() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-1">
-          <AlertCenter />
+          {isMounted && <AlertCenter />}
           <Link
             href="/settings"
             className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"

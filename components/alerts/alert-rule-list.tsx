@@ -1,14 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import type { MarketWithSignals } from "@/lib/markets/types";
-import { useAlertRules } from "@/lib/watchlist/hooks";
-import type { AlertRule, AlertRuleState } from "@/lib/watchlist/types";
+import type { Market } from "@/lib/markets/types";
 import { formatCurrency, formatSignedPercent } from "@/lib/utils";
+import { alertStateAtom } from "@/lib/watchlist/atoms";
+import { useAlertRules, useWatchlist } from "@/lib/watchlist/hooks";
+import type { AlertRule, AlertRuleState } from "@/lib/watchlist/types";
 import { useAtomValue } from "jotai";
 import { RefreshCw, Trash2 } from "lucide-react";
-import { alertStateAtom } from "@/lib/watchlist/atoms";
 import { AlertRuleForm } from "./alert-rule-form";
+import { SectionHeading } from "../ui/section-heading";
 
 function ruleDescription(rule: AlertRule): string {
   switch (rule.ruleSlug) {
@@ -78,33 +79,35 @@ function AlertRuleRow({ rule, state, onRemove, onReset }: AlertRuleRowProps) {
 }
 
 type AlertRuleListProps = {
-  marketId: string;
-  market?: Pick<MarketWithSignals, "id" | "outcomes">;
+  market: Market;
 };
 
-/**
- * Renders the list of alert rules for a market plus a button to add more.
- * Requires `market` to show the add-rule dialog. When `market` is not yet
- * loaded (e.g. watchlist list is still fetching), only existing rules are shown.
- */
-export function AlertRuleList({ marketId, market }: AlertRuleListProps) {
-  const { rules, removeRule, resetRule } = useAlertRules(marketId);
+export function AlertRuleList({ market }: AlertRuleListProps) {
+  const { rules, removeRule, resetRule } = useAlertRules(market.id);
   const alertState = useAtomValue(alertStateAtom);
+  const { isWatched } = useWatchlist();
+
+  if (!isWatched(market.id)) {
+    return null;
+  }
 
   if (rules.length === 0 && !market) return null;
 
   return (
-    <div className="flex flex-col gap-1.5 px-1">
-      {rules.map((rule) => (
-        <AlertRuleRow
-          key={rule.id}
-          rule={rule}
-          state={alertState[rule.id]}
-          onRemove={removeRule}
-          onReset={resetRule}
-        />
-      ))}
-      {market && <AlertRuleForm market={market} />}
+    <div className="border-t pt-6">
+      <SectionHeading>Alert rules</SectionHeading>
+      <div className="flex flex-col gap-1.5 px-1">
+        {rules.map((rule) => (
+          <AlertRuleRow
+            key={rule.id}
+            rule={rule}
+            state={alertState[rule.id]}
+            onRemove={removeRule}
+            onReset={resetRule}
+          />
+        ))}
+        {market && <AlertRuleForm market={market} />}
+      </div>
     </div>
   );
 }

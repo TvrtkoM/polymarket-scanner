@@ -1,7 +1,11 @@
 "use client";
 
 import { fetchMarket, fetchMarketDisputes } from "@/lib/client-api";
-import type { MarketDisputes, MarketWithSignals } from "@/lib/markets/types";
+import type {
+  Market,
+  MarketDisputes,
+  MarketWithSignals
+} from "@/lib/markets/types";
 import {
   cn,
   formatCurrency,
@@ -9,23 +13,16 @@ import {
   formatPrice,
   formatSigned
 } from "@/lib/utils";
+import { useWatchlist } from "@/lib/watchlist/hooks";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { AlertRuleList } from "../alerts/alert-rule-list";
-import { SignalBadges } from "./signals";
 import { PolymarketsLink } from "../ui/polymarkets-link";
+import { SectionHeading } from "../ui/section-heading";
 import { Skeleton } from "../ui/skeleton";
 import { WatchlistStar } from "../watchlist/watchlist-star";
-import { useWatchlist } from "@/lib/watchlist/hooks";
-
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-      {children}
-    </h2>
-  );
-}
+import { SignalBadges } from "./signals";
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -281,18 +278,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         </div>
       )}
 
-      <WatchedAlertRules market={market} />
-    </div>
-  );
-}
-
-function WatchedAlertRules({ market }: { market: MarketWithSignals }) {
-  const { isWatched } = useWatchlist();
-  if (!isWatched(market.id)) return null;
-  return (
-    <div className="border-t pt-6">
-      <SectionHeading>Alert rules</SectionHeading>
-      <AlertRuleList marketId={market.id} market={market} />
+      <AlertRuleList market={market} />
     </div>
   );
 }

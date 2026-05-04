@@ -115,9 +115,9 @@ export function AlertRuleForm({
   return (
     <div className="space-y-4 pt-2">
       <div className="space-y-1.5">
-        <Label>Alert type</Label>
+        <Label htmlFor="type">Alert type</Label>
         <Select value={form.ruleSlug} onValueChange={(v) => setRuleId(v as AlertRuleSlug)}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full" id="type">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -133,9 +133,9 @@ export function AlertRuleForm({
       {form.ruleSlug === 'price_cross' && (
         <>
           <div className="space-y-1.5">
-            <Label>Outcome</Label>
+            <Label htmlFor="outcome">Outcome</Label>
             <Select value={form.outcomeLabel} onValueChange={(v) => setForm({ ...form, outcomeLabel: v })}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full" id="outcome">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -148,12 +148,12 @@ export function AlertRuleForm({
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Direction</Label>
+            <Label htmlFor="direction">Direction</Label>
             <Select
               value={form.direction}
               onValueChange={(v) => setForm({ ...form, direction: v as 'above' | 'below' })}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full" id="direction">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -163,7 +163,7 @@ export function AlertRuleForm({
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Price threshold (0–1)</Label>
+            <Label htmlFor="threshold">Price threshold (0–1)</Label>
             <Input
               type="number"
               min={0}
@@ -171,6 +171,7 @@ export function AlertRuleForm({
               step={0.01}
               value={form.threshold}
               onChange={(e) => setForm({ ...form, threshold: e.target.value })}
+              id="threshhold"
             />
           </div>
         </>

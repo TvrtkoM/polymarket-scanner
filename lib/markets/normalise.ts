@@ -11,11 +11,6 @@ import type { Market, Outcome } from './types'
  * @returns A normalised {@link Market}, or `null` if the market should be skipped.
  */
 export function normaliseMarket(raw: Record<string, unknown>): Market | null {
-  // drop markets we don't care about
-  if (!raw.active || raw.closed || raw.archived) return null
-  if (!raw.acceptingOrders) return null
-  if ((raw.liquidityNum as number) < 1000) return null
-
   let outcomes: Outcome[] = []
 
   try {

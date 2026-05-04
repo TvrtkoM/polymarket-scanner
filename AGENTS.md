@@ -9,7 +9,6 @@ Goal is to add more functionality to the app to improve decision making before m
 ### Market details
 
 - live feed of trades made on that market sorted from newest to oldest by default with additional filtering and sorting functionality
-- bookmarking interesting markets to track
 
 ## Technology stack
 

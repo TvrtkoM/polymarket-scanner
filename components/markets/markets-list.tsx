@@ -9,12 +9,13 @@ import { GridVirtualizer } from '../ui/grid-virtualizer'
 import { MarketCard } from './market-card'
 
 export function MarketsList() {
-  const [{ order, liquidity_num_min }] = useQueryStates(marketsSearchParsers)
-  const queryKey = ['markets', order, liquidity_num_min]
+  const [{ order, liquidity_num_min, closed }] = useQueryStates(marketsSearchParsers)
+
+  const queryKey = ['markets', order, liquidity_num_min, closed]
 
   const { data, fetchNextPage, hasNextPage, error, isFetchingNextPage } = useSuspenseInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam }) => fetchMarkets(pageParam, { order, liquidity_num_min }),
+    queryFn: ({ pageParam }) => fetchMarkets(pageParam, { order, liquidity_num_min, closed }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   })

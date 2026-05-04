@@ -1,6 +1,7 @@
 import {
   createLoader,
   createSearchParamsCache,
+  parseAsBoolean,
   parseAsInteger,
   parseAsStringLiteral,
   type inferParserType,
@@ -15,6 +16,7 @@ import { sortKeys } from './constants'
 export const marketsSearchParsers = {
   order: parseAsStringLiteral(sortKeys).withDefault('volume24hrClob'),
   liquidity_num_min: parseAsInteger.withDefault(1000),
+  closed: parseAsBoolean.withDefault(false),
 }
 
 /** Typed shape of the markets filter/sort params, inferred from the parsers. */

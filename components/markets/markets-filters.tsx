@@ -1,26 +1,23 @@
 'use client'
 
+import { SORT_OPTIONS } from '@/lib/markets/constants'
 import { marketsSearchParsers } from '@/lib/markets/search-params'
 import { MarketSortKey } from '@/lib/markets/types'
-import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
 import { useQueryStates } from 'nuqs'
 import { useCallback, useState } from 'react'
 import { useDebounceCallback } from 'usehooks-ts'
 import { Button } from '../ui/button'
-import { SORT_OPTIONS } from '@/lib/markets/constants'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { Label } from '../ui/label'
+import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
-
-const inputClass =
-  'h-8 rounded-lg border border-border bg-background px-2.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 dark:border-input dark:bg-input/30'
+import { Label } from '../ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 const DEFAULT_ORDER = marketsSearchParsers.order.defaultValue
 const DEFAULT_LIQUIDITY = marketsSearchParsers.liquidity_num_min.defaultValue
 
 export function MarketsFilters() {
-  const [{ order, liquidity_num_min: liqNumMinQuery }, setParams] = useQueryStates(marketsSearchParsers)
+  const [{ order, liquidity_num_min: liqNumMinQuery, closed }, setParams] = useQueryStates(marketsSearchParsers)
 
   const isDirty = order !== DEFAULT_ORDER || liqNumMinQuery !== DEFAULT_LIQUIDITY
 
@@ -44,7 +41,7 @@ export function MarketsFilters() {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-4">
       <div className="space-y-1.5">
         <Label htmlFor="order">Order markets by:</Label>
         <Select value={order} onValueChange={(v) => setParams({ order: v as MarketSortKey })}>
@@ -76,9 +73,20 @@ export function MarketsFilters() {
               debouncedSetMinLiquidityQuery(+e.target.value)
             }}
             id="min-liquidity"
-            className={cn(inputClass, 'w-32 pl-5')}
+            className="w-32 pl-5"
             aria-label="Minimum liquidity"
             placeholder="Min liquidity"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-1 5">
+        <Label htmlFor="closed">Only closed</Label>
+        <div className="h-8 flex items-center">
+          <Checkbox
+            id="closed"
+            checked={closed}
+            onCheckedChange={(checked) => setParams({ closed: checked === true })}
           />
         </div>
       </div>

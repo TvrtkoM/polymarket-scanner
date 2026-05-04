@@ -18,7 +18,9 @@ export function notify({ title, body, marketSlug }: NotifyOptions) {
     description: body,
     action: {
       label: 'View',
-      onClick: () => { window.location.href = `/markets/${marketSlug}` },
+      onClick: () => {
+        window.location.href = `/markets/${marketSlug}`
+      },
     },
     duration: 8_000,
   })

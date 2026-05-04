@@ -1,35 +1,29 @@
-"use client";
+'use client'
 
-import type { MarketWithSignals } from "@/lib/markets/types";
-import { formatCurrency, formatDate, formatSignedPercent } from "@/lib/utils";
+import type { MarketWithSignals } from '@/lib/markets/types'
+import { formatCurrency, formatDate, formatSignedPercent } from '@/lib/utils'
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <span>
       {label}: <span className="font-mono font-medium">{value}</span>
     </span>
-  );
+  )
 }
-import Decimal from "decimal.js";
-import Image from "next/image";
-import Link from "next/link";
-import { SignalBadges } from "./signals";
-import { HorizontalScroller } from "../ui/horizontal-scroller";
-import { PolymarketsLink } from "../ui/polymarkets-link";
-import { WatchlistStar } from "../watchlist/watchlist-star";
+import Decimal from 'decimal.js'
+import Image from 'next/image'
+import Link from 'next/link'
+import { SignalBadges } from './signals'
+import { HorizontalScroller } from '../ui/horizontal-scroller'
+import { PolymarketsLink } from '../ui/polymarkets-link'
+import { WatchlistStar } from '../watchlist/watchlist-star'
 
-export function MarketCard({
-  market,
-  imagePriority = false
-}: {
-  market: MarketWithSignals;
-  imagePriority?: boolean;
-}) {
-  const leadOutcome = market.outcomes[0];
-  const leadOutcomePrice = new Decimal(leadOutcome.price);
-  const prob = leadOutcomePrice.mul(100).toSignificantDigits(4).toString();
-  const change = market.oneDayPriceChange;
-  const changePositive = change >= 0;
+export function MarketCard({ market, imagePriority = false }: { market: MarketWithSignals; imagePriority?: boolean }) {
+  const leadOutcome = market.outcomes[0]
+  const leadOutcomePrice = new Decimal(leadOutcome.price)
+  const prob = leadOutcomePrice.mul(100).toSignificantDigits(4).toString()
+  const change = market.oneDayPriceChange
+  const changePositive = change >= 0
 
   return (
     <article className="flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow grow">
@@ -48,9 +42,7 @@ export function MarketCard({
 
       <div className="flex flex-col gap-3 p-4 flex-1">
         {market.eventTitle && (
-          <p className="text-xs uppercase tracking-wide text-muted-foreground truncate">
-            {market.eventTitle}
-          </p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground truncate">{market.eventTitle}</p>
         )}
 
         <h2 className="text-sm font-semibold leading-snug line-clamp-2 underline">
@@ -63,9 +55,7 @@ export function MarketCard({
           <span className="text-2xl font-bold">
             {leadOutcome.label} <span className="font-mono">{prob}%</span>
           </span>
-          <span
-            className={`text-xs font-medium font-mono ${changePositive ? "text-green-600" : "text-red-500"}`}
-          >
+          <span className={`text-xs font-medium font-mono ${changePositive ? 'text-green-600' : 'text-red-500'}`}>
             {formatSignedPercent(change)} 24h
           </span>
         </div>
@@ -73,9 +63,7 @@ export function MarketCard({
         <div className="flex items-baseline flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <StatItem label="Vol 24h" value={formatCurrency(market.volume24h)} />
           <StatItem label="Liq" value={formatCurrency(market.liquidity)} />
-          {market.endDate && (
-            <StatItem label="End Date" value={formatDate(market.endDate)} />
-          )}
+          {market.endDate && <StatItem label="End Date" value={formatDate(market.endDate)} />}
         </div>
 
         <div className="flex items-center gap-2 pt-1">
@@ -94,5 +82,5 @@ export function MarketCard({
         </div>
       </div>
     </article>
-  );
+  )
 }

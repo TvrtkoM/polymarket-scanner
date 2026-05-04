@@ -1,4 +1,4 @@
-import type { Market } from "./types";
+import type { Market } from './types'
 
 /**
  * Returns `true` when the absolute 24-hour price change meets or exceeds the threshold.
@@ -21,7 +21,7 @@ export function checkPriceMove24h(market: Market, threshold = 0.1): boolean {
  * @returns `true` if the 24-hour volume is ≥ `threshold`.
  */
 export function checkVolumeSurge24h(market: Market, threshold = 500_000): boolean {
-  return market.volume24h >= threshold;
+  return market.volume24h >= threshold
 }
 
 /**
@@ -34,12 +34,17 @@ export function checkVolumeSurge24h(market: Market, threshold = 500_000): boolea
  * @param threshold - The price level (as a decimal fraction) to compare against.
  * @returns `true` if the outcome exists and its price satisfies the directional condition.
  */
-export function checkoOutcomePriceCrossed(market: Market, outcomeLabel: string, direction: 'above' | 'below', threshold: number): boolean {
-  const outcome = market.outcomes.find(o => o.label === outcomeLabel);
+export function checkoOutcomePriceCrossed(
+  market: Market,
+  outcomeLabel: string,
+  direction: 'above' | 'below',
+  threshold: number,
+): boolean {
+  const outcome = market.outcomes.find((o) => o.label === outcomeLabel)
   if (!outcome) {
-    return false;
+    return false
   }
-  return direction === 'above' ? outcome.price >= threshold : outcome.price <= threshold;
+  return direction === 'above' ? outcome.price >= threshold : outcome.price <= threshold
 }
 
 /**
@@ -53,10 +58,10 @@ export function checkoOutcomePriceCrossed(market: Market, outcomeLabel: string, 
  */
 export function checkIsNearResolution(market: Market, days = 7): boolean {
   if (!market.endDate) {
-    return false;
+    return false
   }
-  const daysLeft = (new Date(market.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24);
-  return daysLeft <= days && daysLeft > 0;
+  const daysLeft = (new Date(market.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  return daysLeft <= days && daysLeft > 0
 }
 
 /**
@@ -68,10 +73,10 @@ export function checkIsNearResolution(market: Market, days = 7): boolean {
  * @defaultValue outcomeLabel `"Yes"`
  * @returns `true` if the outcome price is between 0.4 and 0.6 inclusive.
  */
-export function checkIsTossupMarket(market: Market, outcomeLabel = "Yes") {
-  const outcome = market.outcomes.find(o => o.label === outcomeLabel);
+export function checkIsTossupMarket(market: Market, outcomeLabel = 'Yes') {
+  const outcome = market.outcomes.find((o) => o.label === outcomeLabel)
   if (!outcome) {
-    return false;
+    return false
   }
-  return outcome.price >= 0.4 && outcome.price <= 0.6;
+  return outcome.price >= 0.4 && outcome.price <= 0.6
 }

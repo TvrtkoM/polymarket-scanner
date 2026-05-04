@@ -2,9 +2,7 @@ import { formatCurrency, formatSignedPercent } from '../utils'
 import type { Market } from '../markets/types'
 import type { AlertRule, AlertRuleState } from '../watchlist/types'
 
-type EvaluateResult =
-  | { fired: true; message: string }
-  | { fired: false }
+type EvaluateResult = { fired: true; message: string } | { fired: false }
 
 /**
  * Evaluates a single alert rule against the current market snapshot.
@@ -22,21 +20,14 @@ type EvaluateResult =
  * @param state - Persisted arm/fire state for this rule, or `undefined` if
  *   it has never fired.
  */
-export function evaluateRule(
-  rule: AlertRule,
-  market: Market,
-  state: AlertRuleState | undefined,
-): EvaluateResult {
+export function evaluateRule(rule: AlertRule, market: Market, state: AlertRuleState | undefined): EvaluateResult {
   if (state?.status === 'fired') return { fired: false }
 
   switch (rule.ruleSlug) {
     case 'price_cross': {
       const outcome = market.outcomes.find((o) => o.label === rule.outcomeLabel)
       if (!outcome) return { fired: false }
-      const crossed =
-        rule.direction === 'above'
-          ? outcome.price >= rule.threshold
-          : outcome.price <= rule.threshold
+      const crossed = rule.direction === 'above' ? outcome.price >= rule.threshold : outcome.price <= rule.threshold
       if (!crossed) return { fired: false }
       return {
         fired: true,

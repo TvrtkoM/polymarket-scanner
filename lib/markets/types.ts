@@ -1,5 +1,5 @@
-import type { Severity } from "../types"
-import { sortKeys } from "./constants"
+import type { Severity } from '../types'
+import { sortKeys } from './constants'
 
 /** A single tradeable outcome within a {@link Market}. */
 export type Outcome = {
@@ -26,7 +26,7 @@ export type Market = {
   /** URL-friendly identifier. */
   slug: string
   /** Market description */
-  description: string;
+  description: string
   /** All tradeable outcomes for this market. */
   outcomes: Outcome[]
   /** CLOB trading volume over the last 24 hours, in USD. */
@@ -76,7 +76,7 @@ export type WithSignals = {
 export type MarketWithSignals = Market & WithSignals
 
 /** Machine-readable identifier for each rule */
-export type RuleSlug = 'price_cross' | 'price_move_24h' | 'volume_24h' | 'near_resolution' | 'tossup';
+export type RuleSlug = 'price_cross' | 'price_move_24h' | 'volume_24h' | 'near_resolution' | 'tossup'
 
 /** A signal emitted by a {@link Rule} when its condition is satisfied for a market. */
 export type Signal = {
@@ -87,7 +87,7 @@ export type Signal = {
   /** Human-readable explanation of why the signal fired. */
   description: string
   /** Urgency level of the signal. */
-  severity: Severity;
+  severity: Severity
 }
 
 /**
@@ -100,4 +100,4 @@ export type Rule = (market: Market) => Signal | null
  * The set of field names by which markets can be sorted.
  * Derived from {@link sortKeys} so the two stay in sync automatically.
  */
-export type MarketSortKey = typeof sortKeys[number];
+export type MarketSortKey = (typeof sortKeys)[number]

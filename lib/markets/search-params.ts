@@ -3,9 +3,9 @@ import {
   createSearchParamsCache,
   parseAsInteger,
   parseAsStringLiteral,
-  type inferParserType
-} from 'nuqs/server';
-import { sortKeys } from './constants';
+  type inferParserType,
+} from 'nuqs/server'
+import { sortKeys } from './constants'
 
 /**
  * nuqs parsers for markets list filter/sort params.
@@ -14,7 +14,7 @@ import { sortKeys } from './constants';
  */
 export const marketsSearchParsers = {
   order: parseAsStringLiteral(sortKeys).withDefault('volume24hrClob'),
-  liquidity_num_min: parseAsInteger.withDefault(1000)
+  liquidity_num_min: parseAsInteger.withDefault(1000),
 }
 
 /** Typed shape of the markets filter/sort params, inferred from the parsers. */
@@ -25,4 +25,3 @@ export const marketsSearchParamsCache = createSearchParamsCache(marketsSearchPar
 
 /** For use in route handlers (no React cache context). */
 export const loadMarketsSearchParams = createLoader(marketsSearchParsers)
-

@@ -1,95 +1,81 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { RULES_LABELS } from "@/lib/markets/constants";
-import type { Market } from "@/lib/markets/types";
-import { useAlertRules, useWatchlist } from "@/lib/watchlist/hooks";
-import type { AlertRule, AlertRuleSlug } from "@/lib/watchlist/types";
-import { BellPlus } from "lucide-react";
-import { useState } from "react";
-import { sectionHeadingClassName } from "../ui/section-heading";
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { RULES_LABELS } from '@/lib/markets/constants'
+import type { Market } from '@/lib/markets/types'
+import { useAlertRules, useWatchlist } from '@/lib/watchlist/hooks'
+import type { AlertRule, AlertRuleSlug } from '@/lib/watchlist/types'
+import { BellPlus } from 'lucide-react'
+import { useState } from 'react'
+import { sectionHeadingClassName } from '../ui/section-heading'
 
 function randomId() {
-  return Math.random().toString(36).slice(2, 10);
+  return Math.random().toString(36).slice(2, 10)
 }
 
 type FormState =
   | {
-      ruleSlug: "price_cross";
-      outcomeLabel: string;
-      direction: "above" | "below";
-      threshold: string;
+      ruleSlug: 'price_cross'
+      outcomeLabel: string
+      direction: 'above' | 'below'
+      threshold: string
     }
-  | { ruleSlug: "price_move_24h"; absChange: string }
-  | { ruleSlug: "volume_24h"; threshold: string }
-  | { ruleSlug: "near_resolution"; daysLeft: string };
+  | { ruleSlug: 'price_move_24h'; absChange: string }
+  | { ruleSlug: 'volume_24h'; threshold: string }
+  | { ruleSlug: 'near_resolution'; daysLeft: string }
 
-function defaultForm(
-  ruleSlug: AlertRuleSlug,
-  outcomes: Market["outcomes"]
-): FormState {
+function defaultForm(ruleSlug: AlertRuleSlug, outcomes: Market['outcomes']): FormState {
   switch (ruleSlug) {
-    case "price_cross":
+    case 'price_cross':
       return {
         ruleSlug,
-        outcomeLabel: outcomes[0]?.label ?? "Yes",
-        direction: "above",
-        threshold: "0.6"
-      };
-    case "price_move_24h":
-      return { ruleSlug, absChange: "0.05" };
-    case "volume_24h":
-      return { ruleSlug, threshold: "500000" };
-    case "near_resolution":
-      return { ruleSlug, daysLeft: "3" };
+        outcomeLabel: outcomes[0]?.label ?? 'Yes',
+        direction: 'above',
+        threshold: '0.6',
+      }
+    case 'price_move_24h':
+      return { ruleSlug, absChange: '0.05' }
+    case 'volume_24h':
+      return { ruleSlug, threshold: '500000' }
+    case 'near_resolution':
+      return { ruleSlug, daysLeft: '3' }
   }
 }
 
-const { tossup: _, ...ALERT_RULES_LABELS } = RULES_LABELS;
+const { tossup: _, ...ALERT_RULES_LABELS } = RULES_LABELS
 
 function parseForm(form: FormState): AlertRule | null {
-  const id = randomId();
+  const id = randomId()
   switch (form.ruleSlug) {
-    case "price_cross": {
-      const t = parseFloat(form.threshold);
-      if (isNaN(t) || t < 0 || t > 1) return null;
+    case 'price_cross': {
+      const t = parseFloat(form.threshold)
+      if (isNaN(t) || t < 0 || t > 1) return null
       return {
         id,
-        ruleSlug: "price_cross",
+        ruleSlug: 'price_cross',
         outcomeLabel: form.outcomeLabel,
         direction: form.direction,
-        threshold: t
-      };
+        threshold: t,
+      }
     }
-    case "price_move_24h": {
-      const v = parseFloat(form.absChange);
-      if (isNaN(v) || v <= 0 || v > 1) return null;
-      return { id, ruleSlug: "price_move_24h", absChange: v };
+    case 'price_move_24h': {
+      const v = parseFloat(form.absChange)
+      if (isNaN(v) || v <= 0 || v > 1) return null
+      return { id, ruleSlug: 'price_move_24h', absChange: v }
     }
-    case "volume_24h": {
-      const v = parseFloat(form.threshold);
-      if (isNaN(v) || v < 0) return null;
-      return { id, ruleSlug: "volume_24h", threshold: v };
+    case 'volume_24h': {
+      const v = parseFloat(form.threshold)
+      if (isNaN(v) || v < 0) return null
+      return { id, ruleSlug: 'volume_24h', threshold: v }
     }
-    case "near_resolution": {
-      const v = parseInt(form.daysLeft, 10);
-      if (isNaN(v) || v < 1) return null;
-      return { id, ruleSlug: "near_resolution", daysLeft: v };
+    case 'near_resolution': {
+      const v = parseInt(form.daysLeft, 10)
+      if (isNaN(v) || v < 1) return null
+      return { id, ruleSlug: 'near_resolution', daysLeft: v }
     }
   }
 }
@@ -97,46 +83,40 @@ function parseForm(form: FormState): AlertRule | null {
 export function AlertRuleForm({
   market,
   onSubmit,
-  onCancel
+  onCancel,
 }: {
-  market: Market;
-  onSubmit?: () => void;
-  onCancel?: () => void;
+  market: Market
+  onSubmit?: () => void
+  onCancel?: () => void
 }) {
-  const { addRule } = useAlertRules(market.id);
-  const { isWatched, add } = useWatchlist();
+  const { addRule } = useAlertRules(market.id)
+  const { isWatched, add } = useWatchlist()
 
-  const [form, setForm] = useState<FormState>(() =>
-    defaultForm("price_cross", market.outcomes)
-  );
+  const [form, setForm] = useState<FormState>(() => defaultForm('price_cross', market.outcomes))
 
-  const setRuleId = (ruleId: AlertRuleSlug) =>
-    setForm(defaultForm(ruleId, market.outcomes));
+  const setRuleId = (ruleId: AlertRuleSlug) => setForm(defaultForm(ruleId, market.outcomes))
 
   const handleSubmit = () => {
-    const parsed = parseForm(form);
+    const parsed = parseForm(form)
 
-    if (!parsed) return;
+    if (!parsed) return
     if (!isWatched(market.id)) {
       add({
         marketId: market.id,
         slug: market.slug,
-        question: market.question
-      });
+        question: market.question,
+      })
     }
-    addRule(parsed);
-    setForm(defaultForm("price_cross", market.outcomes));
-    onSubmit?.();
-  };
+    addRule(parsed)
+    setForm(defaultForm('price_cross', market.outcomes))
+    onSubmit?.()
+  }
 
   return (
     <div className="space-y-4 pt-2">
       <div className="space-y-1.5">
         <Label>Alert type</Label>
-        <Select
-          value={form.ruleSlug}
-          onValueChange={(v) => setRuleId(v as AlertRuleSlug)}
-        >
+        <Select value={form.ruleSlug} onValueChange={(v) => setRuleId(v as AlertRuleSlug)}>
           <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
@@ -150,14 +130,11 @@ export function AlertRuleForm({
         </Select>
       </div>
 
-      {form.ruleSlug === "price_cross" && (
+      {form.ruleSlug === 'price_cross' && (
         <>
           <div className="space-y-1.5">
             <Label>Outcome</Label>
-            <Select
-              value={form.outcomeLabel}
-              onValueChange={(v) => setForm({ ...form, outcomeLabel: v })}
-            >
+            <Select value={form.outcomeLabel} onValueChange={(v) => setForm({ ...form, outcomeLabel: v })}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -174,9 +151,7 @@ export function AlertRuleForm({
             <Label>Direction</Label>
             <Select
               value={form.direction}
-              onValueChange={(v) =>
-                setForm({ ...form, direction: v as "above" | "below" })
-              }
+              onValueChange={(v) => setForm({ ...form, direction: v as 'above' | 'below' })}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -201,7 +176,7 @@ export function AlertRuleForm({
         </>
       )}
 
-      {form.ruleSlug === "price_move_24h" && (
+      {form.ruleSlug === 'price_move_24h' && (
         <div className="space-y-1.5">
           <Label>Minimum absolute change (0–1, e.g. 0.05 = 5%)</Label>
           <Input
@@ -215,7 +190,7 @@ export function AlertRuleForm({
         </div>
       )}
 
-      {form.ruleSlug === "volume_24h" && (
+      {form.ruleSlug === 'volume_24h' && (
         <div className="space-y-1.5">
           <Label>Volume threshold (USD)</Label>
           <Input
@@ -228,7 +203,7 @@ export function AlertRuleForm({
         </div>
       )}
 
-      {form.ruleSlug === "near_resolution" && (
+      {form.ruleSlug === 'near_resolution' && (
         <div className="space-y-1.5">
           <Label>Days until resolution</Label>
           <Input
@@ -250,35 +225,29 @@ export function AlertRuleForm({
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 export function AlertRuleDialog({
   market,
   open,
-  onOpenChange
+  onOpenChange,
 }: {
-  market: Market;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  market: Market
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className={sectionHeadingClassName}>
-            Add alert rule
-          </DialogTitle>
+          <DialogTitle className={sectionHeadingClassName}>Add alert rule</DialogTitle>
         </DialogHeader>
 
-        <AlertRuleForm
-          market={market}
-          onSubmit={() => onOpenChange(false)}
-          onCancel={() => onOpenChange(false)}
-        />
+        <AlertRuleForm market={market} onSubmit={() => onOpenChange(false)} onCancel={() => onOpenChange(false)} />
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 export function AddAlertButton({ onClick }: { onClick: () => void }) {
@@ -287,5 +256,5 @@ export function AddAlertButton({ onClick }: { onClick: () => void }) {
       <BellPlus className="size-3.5" />
       Add alert
     </Button>
-  );
+  )
 }

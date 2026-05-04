@@ -1,4 +1,4 @@
-import type { Market, Outcome } from "./types"
+import type { Market, Outcome } from './types'
 
 /**
  * Converts a raw Polymarket API market object into a typed {@link Market},
@@ -49,9 +49,9 @@ export function normaliseMarket(raw: Record<string, unknown>): Market | null {
     spread: (raw.spread as number) ?? 0,
     oneDayPriceChange: (raw.oneDayPriceChange as number) ?? 0,
     oneWeekPriceChange: (raw.oneWeekPriceChange as number) ?? 0,
-    eventTitle: events?.[0]?.title as string ?? null,
-    eventId: events?.[0]?.id as string ?? null,
-    eventSlug: events?.[0]?.slug as string ?? null,
+    eventTitle: (events?.[0]?.title as string) ?? null,
+    eventId: (events?.[0]?.id as string) ?? null,
+    eventSlug: (events?.[0]?.slug as string) ?? null,
     image: (raw.image as string) ?? null,
     disputed: (raw.umaResolutionStatuses as string[] | undefined)?.includes('disputed') ?? false,
     questionId: (raw.questionID as string) ?? null,

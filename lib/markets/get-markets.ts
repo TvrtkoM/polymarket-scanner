@@ -1,12 +1,11 @@
-import "server-only";
-import { ApiError } from "../errors";
-import { parseWeiPrice, toStringRecord } from "../utils";
-import { DATA_API_URL, GAMMA_API_URL, marketsPageCount } from "./constants";
-import { normaliseMarket } from "./normalise";
-import { runRules } from "./rules";
-import type { MarketsParams } from "./search-params";
-import type { MarketDisputes, MarketWithSignals } from "./types";
-
+import 'server-only'
+import { ApiError } from '../errors'
+import { parseWeiPrice, toStringRecord } from '../utils'
+import { DATA_API_URL, GAMMA_API_URL, marketsPageCount } from './constants'
+import { normaliseMarket } from './normalise'
+import { runRules } from './rules'
+import type { MarketsParams } from './search-params'
+import type { MarketDisputes, MarketWithSignals } from './types'
 
 /**
  * Fetches a paginated list of active, tradeable markets from the Polymarket API,
@@ -20,7 +19,7 @@ import type { MarketDisputes, MarketWithSignals } from "./types";
  */
 export async function getMarkets(
   options: MarketsParams = { order: 'volume24hrClob', liquidity_num_min: 1000 },
-  cursor?: string
+  cursor?: string,
 ): Promise<{ markets: MarketWithSignals[]; nextCursor: string }> {
   let params: Record<string, string> = {
     active: 'true',
@@ -30,27 +29,24 @@ export async function getMarkets(
     limit: marketsPageCount.toString(),
     ...toStringRecord(options),
     ascending: options.order === 'endDate' ? 'true' : 'false',
-  };
-
-  if (cursor) {
-    params = { ...params, after_cursor: cursor };
   }
 
-  const res = await fetch(
-    `${GAMMA_API_URL}/markets/keyset?${new URLSearchParams(params)}`,
-    {
-      next: { revalidate: 60 }
-    }
-  )
+  if (cursor) {
+    params = { ...params, after_cursor: cursor }
+  }
+
+  const res = await fetch(`${GAMMA_API_URL}/markets/keyset?${new URLSearchParams(params)}`, {
+    next: { revalidate: 60 },
+  })
 
   if (!res.ok) {
     throw new ApiError(`Polymarket API error`, res.status)
   }
 
-  const raw: { markets: Record<string, unknown>[], next_cursor: string } = await res.json()
+  const raw: { markets: Record<string, unknown>[]; next_cursor: string } = await res.json()
 
-  const nextCursor = raw.next_cursor;
-  const marketsRaw = raw.markets;
+  const nextCursor = raw.next_cursor
+  const marketsRaw = raw.markets
 
   const markets = marketsRaw
     .slice(0, marketsPageCount)
@@ -60,7 +56,6 @@ export async function getMarkets(
 
   return { markets, nextCursor }
 }
-
 
 /**
  * Fetches a single market by its slug from the Polymarket API,
@@ -73,21 +68,23 @@ export async function getMarkets(
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
 export async function getMarket(slug: string): Promise<MarketWithSignals> {
-  const res = await fetch(`${GAMMA_API_URL}/markets/slug/${slug}`, { next: { revalidate: 60 } });
+  const res = await fetch(`${GAMMA_API_URL}/markets/slug/${slug}`, {
+    next: { revalidate: 60 },
+  })
 
   if (!res.ok) {
     throw new ApiError(`Polymarket API error`, res.status)
   }
 
-  const raw: Record<string, unknown> = await res.json();
+  const raw: Record<string, unknown> = await res.json()
 
-  const market = normaliseMarket(raw);
+  const market = normaliseMarket(raw)
 
   if (!market) {
     throw new ApiError(`Market not found`, 404)
   }
 
-  return { ...market, signals: runRules(market) };
+  return { ...market, signals: runRules(market) }
 }
 
 /**
@@ -107,10 +104,9 @@ export async function getMarketsByIds(ids: string[]): Promise<MarketWithSignals[
   const params = new URLSearchParams({ limit: '1000' })
   ids.forEach((id) => params.append('id', id))
 
-  const res = await fetch(
-    `${GAMMA_API_URL}/markets/keyset?${params}`,
-    { cache: 'no-store' },
-  )
+  const res = await fetch(`${GAMMA_API_URL}/markets/keyset?${params}`, {
+    cache: 'no-store',
+  })
 
   if (!res.ok) {
     throw new ApiError(`Polymarket API error`, res.status)

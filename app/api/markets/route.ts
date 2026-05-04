@@ -4,15 +4,15 @@ import { loadMarketsSearchParams } from '@/lib/markets/search-params'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  const cursor = request.nextUrl.searchParams.get('cursor') || undefined;
-  const options = loadMarketsSearchParams(request);
+  const cursor = request.nextUrl.searchParams.get('cursor') || undefined
+  const options = loadMarketsSearchParams(request)
 
   try {
     const data = await getMarkets(options, cursor)
     return NextResponse.json(data)
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Failed to fetch from Polymarket'
-    const statusCode = e instanceof ApiError ? e.statusCode : 502;
+    const statusCode = e instanceof ApiError ? e.statusCode : 502
     return NextResponse.json({ error: message }, { status: statusCode })
   }
 }

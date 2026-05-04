@@ -1,7 +1,7 @@
-import { ApiError } from "./errors";
-import type { MarketDisputes, MarketWithSignals } from "./markets/types";
-import type { MarketsParams } from "./markets/search-params";
-import { toStringRecord } from "./utils";
+import { ApiError } from './errors'
+import type { MarketDisputes, MarketWithSignals } from './markets/types'
+import type { MarketsParams } from './markets/search-params'
+import { toStringRecord } from './utils'
 
 /**
  * Fetches a JSON resource and returns it typed as `T`.
@@ -12,10 +12,7 @@ import { toStringRecord } from "./utils";
  * @returns The parsed JSON response body cast to `T`.
  * @throws {@link ApiError} When the response status is not ok.
  */
-export async function apiFetch<T>(
-  input: RequestInfo | URL,
-  init?: RequestInit,
-): Promise<T> {
+export async function apiFetch<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
   const res = await fetch(input, init)
 
   if (!res.ok) {
@@ -39,8 +36,8 @@ export async function fetchMarkets(cursor?: string, options?: MarketsParams) {
   const params = new URLSearchParams({
     cursor: cursor ?? '',
     ...toStringRecord(options ?? {}),
-  });
-  return apiFetch<{ markets: MarketWithSignals[]; nextCursor: string }>(`/api/markets?${params}`);
+  })
+  return apiFetch<{ markets: MarketWithSignals[]; nextCursor: string }>(`/api/markets?${params}`)
 }
 
 /**

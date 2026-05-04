@@ -1,7 +1,7 @@
-import type { RuleSlug } from "../markets/types";
+import type { RuleSlug } from '../markets/types'
 
 /** The discriminated kind of an {@link AlertRule}. */
-export type AlertRuleSlug = Exclude<RuleSlug, 'tossup'>;
+export type AlertRuleSlug = Exclude<RuleSlug, 'tossup'>
 
 /**
  * A single alert rule attached to a watched market.
@@ -9,7 +9,13 @@ export type AlertRuleSlug = Exclude<RuleSlug, 'tossup'>;
  * adding new rules a localised change.
  */
 export type AlertRule =
-  | { id: string; ruleSlug: 'price_cross'; outcomeLabel: string; direction: 'above' | 'below'; threshold: number }
+  | {
+      id: string
+      ruleSlug: 'price_cross'
+      outcomeLabel: string
+      direction: 'above' | 'below'
+      threshold: number
+    }
   | { id: string; ruleSlug: 'price_move_24h'; absChange: number }
   | { id: string; ruleSlug: 'volume_24h'; threshold: number }
   | { id: string; ruleSlug: 'near_resolution'; daysLeft: number }

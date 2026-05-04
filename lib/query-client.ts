@@ -1,15 +1,13 @@
-import { defaultShouldDehydrateQuery, environmentManager, QueryClient } from '@tanstack/react-query';
-import { isRetryable } from './errors';
+import { defaultShouldDehydrateQuery, environmentManager, QueryClient } from '@tanstack/react-query'
+import { isRetryable } from './errors'
 
-let browserQueryClient: QueryClient | null = null;
+let browserQueryClient: QueryClient | null = null
 
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       dehydrate: {
-        shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) ||
-          query.state.status === 'pending',
+        shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
       },
       queries: {
         staleTime: 60_000,
@@ -27,8 +25,8 @@ export function getQueryClient() {
     return makeQueryClient()
   } else {
     if (!browserQueryClient) {
-      browserQueryClient = makeQueryClient();
+      browserQueryClient = makeQueryClient()
     }
-    return browserQueryClient;
+    return browserQueryClient
   }
 }

@@ -1,5 +1,5 @@
-import { formatCurrency } from "../utils"
-import type { Market, Rule, Signal } from "./types"
+import { formatCurrency } from '../utils'
+import type { Market, Rule, Signal } from './types'
 
 /**
  * Fires when the absolute 24-hour price change is at least 10%.
@@ -61,7 +61,7 @@ const highVolumeSurge: Rule = (market) => {
  */
 const nearResolution: Rule = (market) => {
   if (!market.endDate) return null
-  const endDate = new Date(market.endDate);
+  const endDate = new Date(market.endDate)
   const daysLeft = (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   if (daysLeft <= 7 && daysLeft > 0) {
     return {
@@ -87,7 +87,7 @@ const nearResolution: Rule = (market) => {
  * or its price is outside the 40–60% range.
  */
 const tossupMarket: Rule = (market) => {
-  const yesOutcome = market.outcomes.find(o => o.label === 'Yes')
+  const yesOutcome = market.outcomes.find((o) => o.label === 'Yes')
   if (!yesOutcome) return null
   const price = yesOutcome.price
   if (price >= 0.4 && price <= 0.6) {
@@ -105,12 +105,7 @@ const tossupMarket: Rule = (market) => {
  * The full set of rules evaluated against every market by {@link runRules}.
  * Add new {@link Rule} functions here to include them in signal generation.
  */
-const RULES: Rule[] = [
-  significantPriceMove,
-  highVolumeSurge,
-  nearResolution,
-  tossupMarket,
-]
+const RULES: Rule[] = [significantPriceMove, highVolumeSurge, nearResolution, tossupMarket]
 
 /**
  * Evaluates all registered {@link RULES} against a single market.
@@ -119,5 +114,5 @@ const RULES: Rule[] = [
  * @returns An array of {@link Signal} objects for each rule that fired. Empty if none fire.
  */
 export function runRules(market: Market): Signal[] {
-  return RULES.map(rule => rule(market)).filter((s) => s != null)
+  return RULES.map((rule) => rule(market)).filter((s) => s != null)
 }

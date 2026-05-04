@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { SettingsImportExport } from "@/components/settings-import-export";
-import { NotificationPermission } from "@/components/notification-permission";
+import { SettingsImportExport } from '@/components/settings-import-export'
+import { NotificationPermission } from '@/components/notification-permission'
 
 export default function SettingsPage() {
   return (
@@ -12,5 +12,5 @@ export default function SettingsPage() {
         <SettingsImportExport />
       </div>
     </>
-  );
+  )
 }

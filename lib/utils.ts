@@ -1,6 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import Decimal from "decimal.js";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx'
+import Decimal from 'decimal.js'
+import { twMerge } from 'tailwind-merge'
 
 /**
  * Formats a dollar amount into a compact, human-readable string with K/M suffixes.
@@ -11,9 +11,9 @@ import { twMerge } from "tailwind-merge";
  * @returns A prefixed string such as `$1.2M`, `$430K`, or `$99`.
  */
 export function formatCurrency(amount: number, decimals = 0) {
-  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`;
-  if (amount >= 1_000) return `$${(amount / 1_000).toFixed(0)}K`;
-  return `$${amount.toFixed(decimals)}`;
+  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`
+  if (amount >= 1_000) return `$${(amount / 1_000).toFixed(0)}K`
+  return `$${amount.toFixed(decimals)}`
 }
 
 /**
@@ -23,8 +23,8 @@ export function formatCurrency(amount: number, decimals = 0) {
  * @returns A string such as `+5.0%` or `-2.3%`.
  */
 export function formatSignedPercent(fraction: number) {
-  const sign = fraction >= 0 ? "+" : "";
-  return `${sign}${(fraction * 100).toFixed(1)}%`;
+  const sign = fraction >= 0 ? '+' : ''
+  return `${sign}${(fraction * 100).toFixed(1)}%`
 }
 
 /**
@@ -34,13 +34,13 @@ export function formatSignedPercent(fraction: number) {
  * @returns A locale string such as `"Apr 28, 2025, 02:30 PM"`.
  */
 export function formatDate(dateStr: string) {
-  const date = new Date(dateStr);
-  return date.toLocaleString("en-US", {
+  const date = new Date(dateStr)
+  return date.toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
     minute: '2-digit',
-    hour: '2-digit'
+    hour: '2-digit',
   })
 }
 
@@ -51,8 +51,8 @@ export function formatDate(dateStr: string) {
  * @returns A string such as `+1.50` or `-0.75`, always including the sign for non-negative values.
  */
 export function formatSigned(value: number) {
-  const sign = value >= 0 ? "+" : "";
-  return `${sign}${formatPrice(value)}`;
+  const sign = value >= 0 ? '+' : ''
+  return `${sign}${formatPrice(value)}`
 }
 
 /**
@@ -63,7 +63,7 @@ export function formatSigned(value: number) {
  * @returns A string representation of the price rounded to `significantDigits` significant digits.
  */
 export function formatPrice(value: number, significantDigits = 4) {
-  return new Decimal(value).toSignificantDigits(significantDigits).toString();
+  return new Decimal(value).toSignificantDigits(significantDigits).toString()
 }
 
 export function cn(...inputs: ClassValue[]) {
@@ -89,11 +89,11 @@ export function parseWeiPrice(s: string): number {
  * @returns A new object with only defined, non-empty values coerced to strings.
  */
 export function toStringRecord(
-  input: Record<string, string | number | boolean | null | undefined>
+  input: Record<string, string | number | boolean | null | undefined>,
 ): Record<string, string> {
   return Object.fromEntries(
     Object.entries(input)
       .filter(([, v]) => v != null && v !== '')
-      .map(([k, v]) => [k, String(v)])
+      .map(([k, v]) => [k, String(v)]),
   )
 }

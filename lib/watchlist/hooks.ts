@@ -27,21 +27,20 @@ export function useWatchlist() {
   }
 
   const remove = (marketId: string) => {
-    const entry = entries.find(e => e.marketId === marketId);
+    const entry = entries.find((e) => e.marketId === marketId)
     if (!entry) {
-      return;
+      return
     }
 
-    const alertsIds = entry.alertRules.map(ar => ar.id);
+    const alertsIds = entry.alertRules.map((ar) => ar.id)
 
-    setEntries(entries.filter(e => e.marketId !== marketId));
+    setEntries(entries.filter((e) => e.marketId !== marketId))
 
     setAlertState((s) => {
-      const next = { ...s };
-      alertsIds.forEach(id => delete next[id])
+      const next = { ...s }
+      alertsIds.forEach((id) => delete next[id])
       return next
     })
-
   }
 
   return { entries, isWatched, add, remove }
@@ -60,18 +59,17 @@ export function useAlertRules(marketId: string) {
   const rules = entry?.alertRules ?? []
 
   const addRule = (rule: AlertRule) => {
-    setEntries((prev) =>
-      prev.map((e) =>
-        e.marketId === marketId ? { ...e, alertRules: [...e.alertRules, rule] } : e,
-      ),
-    )
+    setEntries((prev) => prev.map((e) => (e.marketId === marketId ? { ...e, alertRules: [...e.alertRules, rule] } : e)))
   }
 
   const updateRule = (rule: AlertRule) => {
     setEntries((prev) =>
       prev.map((e) =>
         e.marketId === marketId
-          ? { ...e, alertRules: e.alertRules.map((r) => (r.id === rule.id ? rule : r)) }
+          ? {
+              ...e,
+              alertRules: e.alertRules.map((r) => (r.id === rule.id ? rule : r)),
+            }
           : e,
       ),
     )
@@ -80,9 +78,7 @@ export function useAlertRules(marketId: string) {
   const removeRule = (ruleId: string) => {
     setEntries((prev) =>
       prev.map((e) =>
-        e.marketId === marketId
-          ? { ...e, alertRules: e.alertRules.filter((r) => r.id !== ruleId) }
-          : e,
+        e.marketId === marketId ? { ...e, alertRules: e.alertRules.filter((r) => r.id !== ruleId) } : e,
       ),
     )
     setAlertState((s) => {

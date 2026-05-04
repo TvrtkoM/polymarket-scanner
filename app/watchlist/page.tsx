@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { WatchlistList } from "@/components/watchlist/watchlist-list";
+import { WatchlistList } from '@/components/watchlist/watchlist-list'
 
 export default function WatchlistPage() {
   return (
@@ -8,5 +8,5 @@ export default function WatchlistPage() {
       <h1 className="mb-8 text-3xl font-bold tracking-tight">Watchlist</h1>
       <WatchlistList />
     </>
-  );
+  )
 }

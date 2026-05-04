@@ -16,7 +16,7 @@ async function Markets({ searchParams }: { searchParams: MarketsSearchParams }) 
   const queryClient = getQueryClient()
   const params = await marketsSearchParamsCache.parse(searchParams)
 
-  const queryKey: [string, ...unknown[]] = ['markets', params.order, params.liquidity_num_min]
+  const queryKey = ['markets', params.order, params.liquidity_num_min] as const
 
   await queryClient.prefetchInfiniteQuery({
     queryKey,

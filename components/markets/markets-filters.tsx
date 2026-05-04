@@ -5,7 +5,7 @@ import { marketsSearchParsers } from '@/lib/markets/search-params'
 import { MarketSortKey } from '@/lib/markets/types'
 import { X } from 'lucide-react'
 import { useQueryStates } from 'nuqs'
-import { useCallback, useState } from 'react'
+import { useCallback, useOptimistic, useState, useTransition } from 'react'
 import { useDebounceCallback } from 'usehooks-ts'
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
@@ -18,6 +18,9 @@ const DEFAULT_LIQUIDITY = marketsSearchParsers.liquidity_num_min.defaultValue
 
 export function MarketsFilters() {
   const [{ order, liquidity_num_min: liqNumMinQuery, closed }, setParams] = useQueryStates(marketsSearchParsers)
+
+  const [optimisticClosed, setOptimisticClosed] = useOptimistic(closed)
+  const [isPending, startTransition] = useTransition()
 
   const isDirty = order !== DEFAULT_ORDER || liqNumMinQuery !== DEFAULT_LIQUIDITY
 
@@ -85,8 +88,14 @@ export function MarketsFilters() {
         <div className="h-8 flex items-center">
           <Checkbox
             id="closed"
-            checked={closed}
-            onCheckedChange={(checked) => setParams({ closed: checked === true })}
+            checked={optimisticClosed}
+            disabled={isPending}
+            onCheckedChange={(checked) => {
+              startTransition(async () => {
+                setOptimisticClosed(checked === true)
+                await setParams({ closed: checked === true })
+              })
+            }}
           />
         </div>
       </div>

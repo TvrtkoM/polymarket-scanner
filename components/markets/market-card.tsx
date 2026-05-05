@@ -7,7 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { HorizontalScroller } from '../ui/horizontal-scroller'
 import { PolymarketsLink } from '../ui/polymarkets-link'
-import { WatchlistIcon } from '../watchlist/watchlist-star'
+import { WatchlistIcon } from '../watchlist/watchlist-icon'
 import { SignalBadges } from './signals'
 
 function StatItem({ label, value }: { label: string; value: string }) {

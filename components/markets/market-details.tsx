@@ -10,7 +10,7 @@ import { AlertRuleListSection } from '../alerts/alert-rule-list'
 import { PolymarketsLink } from '../ui/polymarkets-link'
 import { SectionHeading } from '../ui/section-heading'
 import { Skeleton } from '../ui/skeleton'
-import { WatchlistIcon } from '../watchlist/watchlist-star'
+import { WatchlistIcon } from '../watchlist/watchlist-icon'
 import { SignalBadges } from './signals'
 
 function Stat({ label, value }: { label: string; value: string }) {

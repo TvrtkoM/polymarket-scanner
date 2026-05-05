@@ -10,7 +10,7 @@ import { AlertRuleDialog } from '../alerts/alert-rule-form'
 import { Button } from '../ui/button'
 import { Skeleton } from '../ui/skeleton'
 
-type WatchlistStarProps = {
+type WatchlistIconProps = {
   market: Market
   className?: string
 }
@@ -19,7 +19,7 @@ type WatchlistStarProps = {
  * Toggle button that adds or removes a market from the watchlist.
  * Renders a filled star when watched, outline star otherwise.
  */
-export function WatchlistStar({ market, className }: WatchlistStarProps) {
+export function WatchlistIcon({ market, className }: WatchlistIconProps) {
   const { isWatched, remove, entries } = useWatchlist()
   const watched = isWatched(market.id)
   const [dialogOpen, setDialogOpen] = useState(false)

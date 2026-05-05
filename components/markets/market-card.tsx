@@ -7,7 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { HorizontalScroller } from '../ui/horizontal-scroller'
 import { PolymarketsLink } from '../ui/polymarkets-link'
-import { WatchlistStar } from '../watchlist/watchlist-star'
+import { WatchlistIcon } from '../watchlist/watchlist-star'
 import { SignalBadges } from './signals'
 
 function StatItem({ label, value }: { label: string; value: string }) {
@@ -77,7 +77,7 @@ export function MarketCard({ market, imagePriority = false }: { market: MarketWi
             )}
           </div>
 
-          <WatchlistStar market={market} />
+          <WatchlistIcon market={market} />
 
           <PolymarketsLink slug={market.slug} />
         </div>

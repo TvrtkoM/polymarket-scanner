@@ -10,7 +10,7 @@ import { AlertRuleListSection } from '../alerts/alert-rule-list'
 import { PolymarketsLink } from '../ui/polymarkets-link'
 import { SectionHeading } from '../ui/section-heading'
 import { Skeleton } from '../ui/skeleton'
-import { WatchlistStar } from '../watchlist/watchlist-star'
+import { WatchlistIcon } from '../watchlist/watchlist-star'
 import { SignalBadges } from './signals'
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -108,7 +108,7 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           )}
           <h1 className="text-2xl font-bold tracking-tight flex-1">{market.question}</h1>
           <div className="flex items-center gap-1 self-start">
-            <WatchlistStar market={market} />
+            <WatchlistIcon market={market} />
             <PolymarketsLink slug={market.slug} />
           </div>
         </div>

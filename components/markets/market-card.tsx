@@ -9,6 +9,7 @@ import { HorizontalScroller } from '../ui/horizontal-scroller'
 import { PolymarketsLink } from '../ui/polymarkets-link'
 import { WatchlistIcon } from '../watchlist/watchlist-icon'
 import { SignalBadges } from './signals'
+import { MarketStatuses } from './market-statuses'
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
@@ -27,18 +28,23 @@ export function MarketCard({ market, imagePriority = false }: { market: MarketWi
 
   return (
     <article className="flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow grow">
-      {market.image && (
-        <div className="relative h-36 w-full bg-muted">
-          <Image
-            src={market.image}
-            alt=""
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 570px, (max-width: 1024px) 470px, 380px"
-            priority={imagePriority}
-          />
+      <div className="h-36 relative">
+        {market.image && (
+          <div className="absolute h-full w-full bg-muted">
+            <Image
+              src={market.image}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 570px, (max-width: 1024px) 470px, 380px"
+              priority={imagePriority}
+            />
+          </div>
+        )}
+        <div className="absolute top-2 right-4">
+          <MarketStatuses market={market} />
         </div>
-      )}
+      </div>
 
       <div className="flex flex-col gap-3 p-4 flex-1">
         {market.eventTitle && (

@@ -12,6 +12,7 @@ import { SectionHeading } from '../ui/section-heading'
 import { Skeleton } from '../ui/skeleton'
 import { WatchlistIcon } from '../watchlist/watchlist-icon'
 import { SignalBadges } from './signals'
+import { MarketStatuses } from './market-statuses'
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -107,6 +108,9 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
             </div>
           )}
           <h1 className="text-2xl font-bold tracking-tight flex-1">{market.question}</h1>
+          <div className="self-start mt-1">
+            <MarketStatuses market={market} />
+          </div>
           <div className="flex items-center gap-1 self-start">
             <WatchlistIcon market={market} />
             <PolymarketsLink slug={market.slug} />

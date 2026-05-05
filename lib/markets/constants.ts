@@ -28,3 +28,6 @@ export const RULES_LABELS: Record<RuleSlug, string> = {
   near_resolution: 'Near resolution',
   tossup: 'Tossup (too close to call)',
 } as const
+
+/** Market resolution statuses */
+export const RESOLUTION_STATUSES = ['disputed', 'resolved', 'proposed'] as const

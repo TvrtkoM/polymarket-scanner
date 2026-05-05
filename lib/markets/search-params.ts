@@ -6,7 +6,7 @@ import {
   parseAsStringLiteral,
   type inferParserType,
 } from 'nuqs/server'
-import { sortKeys } from './constants'
+import { RESOLUTION_STATUSES, sortKeys } from './constants'
 
 /**
  * nuqs parsers for markets list filter/sort params.
@@ -16,6 +16,7 @@ import { sortKeys } from './constants'
 export const marketsSearchParsers = {
   order: parseAsStringLiteral(sortKeys).withDefault('volume24hrClob'),
   liquidity_num_min: parseAsInteger.withDefault(1000),
+  uma_resolution_status: parseAsStringLiteral([...RESOLUTION_STATUSES, '']).withDefault(''),
   closed: parseAsBoolean.withDefault(false),
 }
 

@@ -19,7 +19,12 @@ import type { MarketDisputes, MarketWithSignals } from './types'
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
  */
 export async function getMarkets(
-  options: MarketsParams = { order: 'volume24hrClob', liquidity_num_min: 1000, closed: false },
+  options: MarketsParams = {
+    order: 'volume24hrClob',
+    liquidity_num_min: 1000,
+    closed: false,
+    uma_resolution_status: '',
+  },
   cursor?: string,
 ): Promise<{ markets: MarketWithSignals[]; nextCursor: string }> {
   let params: Record<string, string> = {

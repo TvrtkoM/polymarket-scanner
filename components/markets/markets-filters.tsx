@@ -1,10 +1,11 @@
 'use client'
 
 import { useIsHydrated } from '@/lib/hooks'
-import { SORT_OPTIONS } from '@/lib/markets/constants'
+import { RESOLUTION_STATUSES, SORT_OPTIONS } from '@/lib/markets/constants'
 import { MarketsParams, marketsSearchParsers } from '@/lib/markets/search-params'
-import { MarketSortKey } from '@/lib/markets/types'
+import { MarketSortKey, ResolutionStatus } from '@/lib/markets/types'
 import { useDebouncedCallback } from '@mantine/hooks'
+import capitalize from 'lodash/capitalize'
 import { X } from 'lucide-react'
 import { useQueryStates } from 'nuqs'
 import { useOptimistic, useState, useTransition } from 'react'
@@ -30,7 +31,8 @@ function MarketsFiltersSkeleton() {
 
 export function MarketsFilters() {
   const [isPending, startTransition] = useTransition()
-  const [{ order, liquidity_num_min: liqNumMinQuery, closed }, setParams] = useQueryStates(marketsSearchParsers)
+  const [{ order, liquidity_num_min: liqNumMinQuery, closed, uma_resolution_status }, setParams] =
+    useQueryStates(marketsSearchParsers)
 
   const [optimisticClosed, setOptimisticClosed] = useOptimistic(closed)
 
@@ -65,7 +67,7 @@ export function MarketsFilters() {
       <div className="space-y-1.5">
         <Label htmlFor="order">Order markets by:</Label>
         <Select value={order} onValueChange={(v) => setParamsInTransition({ order: v as MarketSortKey })}>
-          <SelectTrigger className="w-full" id="order">
+          <SelectTrigger className="w-38.5" id="order">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -98,6 +100,32 @@ export function MarketsFilters() {
             placeholder="Min liquidity"
           />
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="resolutionStatus">Resolution status:</Label>
+        <Select
+          value={uma_resolution_status || 'no_status'}
+          onValueChange={(v: ResolutionStatus | 'no_status') => {
+            const value = v === 'no_status' ? '' : v
+            setParamsInTransition({ uma_resolution_status: value })
+          }}
+        >
+          <SelectTrigger className="w-28" id="resolutionStatus">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {([...RESOLUTION_STATUSES, 'no_status'] as const).map((status) => {
+              const label = status === 'no_status' ? 'All' : capitalize(status)
+
+              return (
+                <SelectItem key={status} value={status}>
+                  {label}
+                </SelectItem>
+              )
+            })}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-1 5">

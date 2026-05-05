@@ -3,19 +3,32 @@
 import { fetchMarkets } from '@/lib/client-api'
 import { useIsHydrated } from '@/lib/hooks'
 import { marketsSearchParsers } from '@/lib/markets/search-params'
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
+import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { useQueryStates } from 'nuqs'
+import { useEffect, useMemo } from 'react'
 import { GridVirtualizer } from '../ui/grid-virtualizer'
 import { MarketCard } from './market-card'
 
 export function MarketsList() {
-  const [{ order, liquidity_num_min, closed }] = useQueryStates(marketsSearchParsers)
+  const [params] = useQueryStates(marketsSearchParsers)
+  const queryClient = useQueryClient()
 
-  const queryKey = ['markets', order, liquidity_num_min, closed]
+  const queryKey = useMemo(() => {
+    const { order, liquidity_num_min, closed, uma_resolution_status } = params
+    return ['markets', order, liquidity_num_min, closed, uma_resolution_status] as const
+  }, [params])
+
+  const queryKeyStr = queryKey.join('-')
+
+  useEffect(() => {
+    return () => {
+      queryClient.removeQueries({ queryKey, exact: true })
+    }
+  }, [queryKey, queryClient])
 
   const { data, fetchNextPage, hasNextPage, error, isFetchingNextPage } = useSuspenseInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam }) => fetchMarkets(pageParam, { order, liquidity_num_min, closed }),
+    queryFn: ({ pageParam }) => fetchMarkets(pageParam, params),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   })
@@ -41,7 +54,7 @@ export function MarketsList() {
   return (
     <>
       <GridVirtualizer
-        key={`${order}-${liquidity_num_min}`}
+        key={queryKeyStr}
         items={markets}
         renderItem={(item, i, rowIndex, cols) => (
           <MarketCard key={item.id} market={item} imagePriority={rowIndex === 0 && i < cols} />

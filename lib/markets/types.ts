@@ -1,5 +1,5 @@
 import type { Severity } from '../types'
-import { sortKeys } from './constants'
+import { RESOLUTION_STATUSES, sortKeys } from './constants'
 
 /** A single tradeable outcome within a {@link Market}. */
 export type Outcome = {
@@ -16,6 +16,8 @@ export type MarketDisputes = {
   /** Outcome re-proposed after first dispute, or null if not yet re-proposed. */
   reproposedPrice: number | null
 }
+
+export type ResolutionStatus = (typeof RESOLUTION_STATUSES)[number]
 
 /** A normalised prediction market, derived from a raw Polymarket API response. */
 export type Market = {
@@ -39,6 +41,8 @@ export type Market = {
   endDate: string | null
   /** Whether the market is currently active. */
   active: boolean
+  /** Wheter the market is closed */
+  closed: boolean
   /** Whether the market is currently accepting orders. */
   acceptingOrders: boolean
   /** Price of the most recent trade, as a decimal (0–1). */
@@ -65,6 +69,8 @@ export type Market = {
   disputed: boolean
   /** UMA question ID or `null` if none. */
   questionId: string | null
+  /** Resolution status - `disputed`, `resolved` or `null` if none */
+  resolutionStatus: ResolutionStatus | null
 }
 
 /** Mixin that attaches rule-engine signals to any type. */

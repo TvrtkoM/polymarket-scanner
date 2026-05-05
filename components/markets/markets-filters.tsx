@@ -1,42 +1,42 @@
 'use client'
 
 import { SORT_OPTIONS } from '@/lib/markets/constants'
-import { marketsSearchParsers } from '@/lib/markets/search-params'
+import { MarketsParams, marketsSearchParsers } from '@/lib/markets/search-params'
 import { MarketSortKey } from '@/lib/markets/types'
+import { useDebouncedCallback } from '@mantine/hooks'
 import { X } from 'lucide-react'
 import { useQueryStates } from 'nuqs'
-import { useCallback, useOptimistic, useState, useTransition } from 'react'
-import { useDebounceCallback } from 'usehooks-ts'
+import { useOptimistic, useState, useTransition } from 'react'
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Spinner } from '../ui/spinner'
 
 const DEFAULT_ORDER = marketsSearchParsers.order.defaultValue
 const DEFAULT_LIQUIDITY = marketsSearchParsers.liquidity_num_min.defaultValue
 
 export function MarketsFilters() {
+  const [isPending, startTransition] = useTransition()
   const [{ order, liquidity_num_min: liqNumMinQuery, closed }, setParams] = useQueryStates(marketsSearchParsers)
 
   const [optimisticClosed, setOptimisticClosed] = useOptimistic(closed)
-  const [isPending, startTransition] = useTransition()
 
   const isDirty = order !== DEFAULT_ORDER || liqNumMinQuery !== DEFAULT_LIQUIDITY
 
   const [liqNumMin, setLiqNumMin] = useState(liqNumMinQuery)
 
-  const setLiqNumMinQuery = useCallback(
-    (liq: number) => {
-      setParams({ liquidity_num_min: liq })
-    },
-    [setParams],
-  )
+  const setParamsInTransition = (params: Partial<MarketsParams>) => {
+    startTransition(async () => {
+      await setParams(params)
+    })
+  }
 
-  const debouncedSetMinLiquidityQuery = useDebounceCallback(setLiqNumMinQuery, 250)
+  const debouncedSetParamsInTransition = useDebouncedCallback(setParamsInTransition, 250)
 
   function reset() {
-    setParams({
+    setParamsInTransition({
       order: DEFAULT_ORDER,
       liquidity_num_min: DEFAULT_LIQUIDITY,
     })
@@ -47,7 +47,7 @@ export function MarketsFilters() {
     <div className="flex flex-wrap items-center gap-4">
       <div className="space-y-1.5">
         <Label htmlFor="order">Order markets by:</Label>
-        <Select value={order} onValueChange={(v) => setParams({ order: v as MarketSortKey })}>
+        <Select value={order} onValueChange={(v) => setParamsInTransition({ order: v as MarketSortKey })}>
           <SelectTrigger className="w-full" id="order">
             <SelectValue />
           </SelectTrigger>
@@ -73,7 +73,7 @@ export function MarketsFilters() {
             value={liqNumMin}
             onChange={(e) => {
               setLiqNumMin(+e.target.value)
-              debouncedSetMinLiquidityQuery(+e.target.value)
+              debouncedSetParamsInTransition({ liquidity_num_min: +e.target.value })
             }}
             id="min-liquidity"
             className="w-32 pl-5"
@@ -89,12 +89,11 @@ export function MarketsFilters() {
           <Checkbox
             id="closed"
             checked={optimisticClosed}
-            disabled={isPending}
             onCheckedChange={(checked) => {
               startTransition(async () => {
                 setOptimisticClosed(checked === true)
-                await setParams({ closed: checked === true })
               })
+              setParamsInTransition({ closed: checked === true })
             }}
           />
         </div>
@@ -106,6 +105,8 @@ export function MarketsFilters() {
           Reset
         </Button>
       )}
+
+      {isPending && <Spinner className="ml-auto" />}
     </div>
   )
 }

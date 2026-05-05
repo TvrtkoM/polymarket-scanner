@@ -66,6 +66,13 @@ export function formatPrice(value: number, significantDigits = 4) {
   return new Decimal(value).toSignificantDigits(significantDigits).toString()
 }
 
+/**
+ * Merges Tailwind class names, resolving conflicts via `tailwind-merge` and
+ * handling conditional classes via `clsx`.
+ *
+ * @param inputs - Any mix of strings, arrays, or conditional class objects accepted by `clsx`.
+ * @returns A single deduplicated, conflict-resolved class string.
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

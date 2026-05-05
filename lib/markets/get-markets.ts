@@ -13,6 +13,7 @@ import type { MarketDisputes, MarketWithSignals } from './types'
  *
  * Results are cached by Next.js and revalidated every 60 seconds.
  *
+ * @param options - Filter and sort parameters (see {@link MarketsParams}). Defaults to volume-sorted, ≥ $1 000 liquidity, active only.
  * @param cursor - Opaque keyset cursor returned by a previous call; omit to fetch the first page.
  * @returns An object containing the normalised {@link MarketWithSignals} array and an opaque `nextCursor` to pass on the next call.
  * @throws `Error` When the Polymarket API responds with a non-2xx status.
@@ -91,7 +92,9 @@ export async function getMarket(slug: string): Promise<MarketWithSignals> {
  * Fetches a batch of markets by their Polymarket ids.
  * Uses repeated `id` query params since the keyset endpoint does not support
  * comma-separated values. `limit` is set to 1000 (the documented maximum) so
- * all requested markets are returned in a single response with no pagination.
+ * all requested markets are returned without pagination.
+ * Makes a second request with `closed: true` when the first response returns
+ * fewer markets than requested, to cover watchlisted markets that have closed.
  * Uses `cache: 'no-store'` so watchlist polling always sees fresh prices.
  *
  * @param ids - Array of Polymarket market ids to fetch.

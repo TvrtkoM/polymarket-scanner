@@ -1,4 +1,7 @@
-/** Status codes of erroneous api calls that should be retried */
+/**
+ * HTTP status codes that indicate a transient server-side failure and are
+ * safe to retry (e.g. timeouts, rate limits, gateway errors).
+ */
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504])
 
 /** Marks an error as eligible for automatic retry logic. */

@@ -9,7 +9,7 @@ type EvaluateResult = { fired: true; message: string } | { fired: false }
  *
  * Returns `fired: false` when:
  * - The rule's state is already `'fired'` (first-crossing semantics; re-arm
- *   requires explicit user action via {@link useAlertRules.resetRule}).
+ *   requires explicit user action via `resetRule` from {@link useAlertRules}).
  * - The rule's condition is not currently met.
  *
  * This function is pure — no I/O, no React, no storage — so it can be

@@ -20,6 +20,11 @@ function makeQueryClient() {
   })
 }
 
+/**
+ * Returns the singleton {@link QueryClient} for the current environment.
+ * On the server a fresh instance is created per request; on the browser the
+ * same instance is reused across renders.
+ */
 export function getQueryClient() {
   if (environmentManager.isServer()) {
     return makeQueryClient()

@@ -9,7 +9,7 @@ import type { Market, Rule, Signal } from './types'
  * - `'high'`   — change is ≥ 20%.
  *
  * @param market - The market to evaluate.
- * @returns A `'significant_price_move'` {@link Signal}, or `null` if the price
+ * @returns A `'price_move_24h'` {@link Signal}, or `null` if the price
  * change is below the threshold.
  */
 const significantPriceMove: Rule = (market) => {
@@ -32,7 +32,7 @@ const significantPriceMove: Rule = (market) => {
  * - `'high'`   — volume is > $1M.
  *
  * @param market - The market to evaluate.
- * @returns A `'high_volume_surge'` {@link Signal}, or `null` if volume is
+ * @returns A `'volume_24h'` {@link Signal}, or `null` if volume is
  * below the threshold.
  */
 const highVolumeSurge: Rule = (market) => {

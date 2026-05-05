@@ -9,6 +9,7 @@ export const DATA_API_URL = 'https://data-api.polymarket.com'
 /** Number of markets returned per page from the `/api/markets` endpoint. */
 export const marketsPageCount = 18
 
+/** Tuple of all valid market sort key strings, used to derive {@link MarketSortKey}. */
 export const sortKeys = ['volume24hrClob', 'volume1wkClob', 'liquidity', 'endDate'] as const
 
 /** Display labels for the sort options exposed in the UI. */

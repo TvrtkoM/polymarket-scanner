@@ -2,10 +2,11 @@ import type { Market, Outcome } from './types'
 
 /**
  * Converts a raw Polymarket API market object into a typed {@link Market},
- * applying eligibility filters and parsing nested JSON fields.
+ * parsing nested JSON fields.
  *
- * Returns `null` for markets that are inactive, closed, archived, not accepting
- * orders, have less than $1,000 liquidity, or contain malformed outcome data.
+ * Returns `null` only for markets with malformed outcome data (unparseable
+ * `outcomes` or `outcomePrices` fields). Eligibility filtering (active,
+ * liquidity, etc.) is applied upstream by the caller.
  *
  * @param raw - An untyped market object from the Polymarket REST API.
  * @returns A normalised {@link Market}, or `null` if the market should be skipped.

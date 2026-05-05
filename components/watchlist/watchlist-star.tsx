@@ -15,10 +15,6 @@ type WatchlistIconProps = {
   className?: string
 }
 
-/**
- * Toggle button that adds or removes a market from the watchlist.
- * Renders a filled star when watched, outline star otherwise.
- */
 export function WatchlistIcon({ market, className }: WatchlistIconProps) {
   const { isWatched, remove, entries } = useWatchlist()
   const watched = isWatched(market.id)

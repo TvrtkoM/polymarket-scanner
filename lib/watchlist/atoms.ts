@@ -1,6 +1,7 @@
 import { atomWithStorage } from 'jotai/utils'
 import type { AlertRuleState, FiredAlert, WatchlistEntry } from './types'
 
+/** Maximum number of fired alerts retained in the {@link firedAlertsAtom} ring-buffer. */
 const FIRED_ALERTS_MAX = 200
 
 /**

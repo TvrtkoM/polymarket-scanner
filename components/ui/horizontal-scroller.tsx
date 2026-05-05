@@ -1,6 +1,16 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Ref, useEffect, useRef, useState } from 'react'
 
+/**
+ * Wraps a horizontally scrollable element with chevron navigation buttons.
+ *
+ * Uses a render-prop pattern: `children` receives a `ref` to attach to the
+ * scrollable element. The left arrow is hidden when scrolled to the start;
+ * the right arrow is invisible (but keeps its space) when scrolled to the end.
+ * Arrow visibility updates on scroll and on resize via a `ResizeObserver`.
+ *
+ * @param children - Render prop that receives a `ref` to forward to the scrollable element.
+ */
 export function HorizontalScroller<E extends HTMLElement>({
   children,
 }: {

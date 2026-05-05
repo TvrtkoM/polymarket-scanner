@@ -19,6 +19,7 @@ export function WatchlistList() {
     enabled: ids.length > 0,
     refetchInterval: 30_000,
     staleTime: 25_000,
+    placeholderData: (prev) => prev,
   })
 
   const hydrated = useIsHydrated()
@@ -31,9 +32,11 @@ export function WatchlistList() {
     return <p className="text-muted-foreground text-sm">Loading watchlist…</p>
   }
 
+  const visibleMarkets = markets.filter((m) => ids.includes(m.id))
+
   return (
     <GridVirtualizer
-      items={markets}
+      items={visibleMarkets}
       renderItem={(item, i, rowIndex, cols) => (
         <>
           <MarketCard market={item} imagePriority={rowIndex === 0 && i < cols} />

@@ -7,6 +7,8 @@ import { BellPlus } from 'lucide-react'
 import { useState } from 'react'
 import { AlertRuleDialog } from '../alerts/alert-rule-form'
 import { Button } from '../ui/button'
+import { Skeleton } from '../ui/skeleton'
+import { useIsMounted } from '@/lib/hooks'
 
 type WatchlistStarProps = {
   market: Market
@@ -32,6 +34,12 @@ export function WatchlistStar({ market, className }: WatchlistStarProps) {
     } else {
       setDialogOpen(true)
     }
+  }
+
+  const isMounted = useIsMounted()
+
+  if (!isMounted) {
+    return <Skeleton className="h-8 w-8" />
   }
 
   return (

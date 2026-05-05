@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useIsMounted } from '@/lib/hooks'
+import { Skeleton } from './ui/skeleton'
 
 const NAV_LINKS = [
   { href: '/markets', label: 'Markets' },
@@ -36,7 +37,7 @@ export function Header() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-1">
-          {isMounted && <AlertCenter />}
+          {isMounted ? <AlertCenter /> : <Skeleton className="h-8 w-8" />}
           <Link
             href="/settings"
             className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"

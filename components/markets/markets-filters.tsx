@@ -1,5 +1,6 @@
 'use client'
 
+import { useIsMounted } from '@/lib/hooks'
 import { SORT_OPTIONS } from '@/lib/markets/constants'
 import { MarketsParams, marketsSearchParsers } from '@/lib/markets/search-params'
 import { MarketSortKey } from '@/lib/markets/types'
@@ -12,10 +13,20 @@ import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Skeleton } from '../ui/skeleton'
 import { Spinner } from '../ui/spinner'
 
 const DEFAULT_ORDER = marketsSearchParsers.order.defaultValue
 const DEFAULT_LIQUIDITY = marketsSearchParsers.liquidity_num_min.defaultValue
+
+function MarketsFiltersSkeleton() {
+  return (
+    <div className="flex flex-col space-y-1.5">
+      <Skeleton className="h-3.5 w-full" />
+      <Skeleton className="h-8" />
+    </div>
+  )
+}
 
 export function MarketsFilters() {
   const [isPending, startTransition] = useTransition()
@@ -41,6 +52,12 @@ export function MarketsFilters() {
       liquidity_num_min: DEFAULT_LIQUIDITY,
     })
     setLiqNumMin(DEFAULT_LIQUIDITY)
+  }
+
+  const isMounted = useIsMounted()
+
+  if (!isMounted) {
+    return <MarketsFiltersSkeleton />
   }
 
   return (

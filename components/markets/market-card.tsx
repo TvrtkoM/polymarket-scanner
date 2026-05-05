@@ -2,6 +2,13 @@
 
 import type { MarketWithSignals } from '@/lib/markets/types'
 import { formatCurrency, formatDate, formatSignedPercent } from '@/lib/utils'
+import Decimal from 'decimal.js'
+import Image from 'next/image'
+import Link from 'next/link'
+import { HorizontalScroller } from '../ui/horizontal-scroller'
+import { PolymarketsLink } from '../ui/polymarkets-link'
+import { WatchlistStar } from '../watchlist/watchlist-star'
+import { SignalBadges } from './signals'
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
@@ -10,13 +17,6 @@ function StatItem({ label, value }: { label: string; value: string }) {
     </span>
   )
 }
-import Decimal from 'decimal.js'
-import Image from 'next/image'
-import Link from 'next/link'
-import { SignalBadges } from './signals'
-import { HorizontalScroller } from '../ui/horizontal-scroller'
-import { PolymarketsLink } from '../ui/polymarkets-link'
-import { WatchlistStar } from '../watchlist/watchlist-star'
 
 export function MarketCard({ market, imagePriority = false }: { market: MarketWithSignals; imagePriority?: boolean }) {
   const leadOutcome = market.outcomes[0]
@@ -78,6 +78,7 @@ export function MarketCard({ market, imagePriority = false }: { market: MarketWi
           </div>
 
           <WatchlistStar market={market} />
+
           <PolymarketsLink slug={market.slug} />
         </div>
       </div>

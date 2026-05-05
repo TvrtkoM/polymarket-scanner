@@ -9,6 +9,47 @@ import { useState } from 'react'
 import { AlertRuleDialog } from '../alerts/alert-rule-form'
 import { Button } from '../ui/button'
 import { Skeleton } from '../ui/skeleton'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { sectionHeadingClassName } from '../ui/section-heading'
+
+function ConfirmAlertRemovalDialog({
+  open,
+  onConfirm,
+  onCancel,
+  numAlerts,
+}: {
+  open: boolean
+  onConfirm: () => void
+  onCancel: () => void
+  numAlerts: number
+}) {
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!open) {
+          onCancel()
+        }
+      }}
+    >
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className={sectionHeadingClassName}>Confirm removing market from watchlist?</DialogTitle>
+        </DialogHeader>
+
+        <DialogDescription>
+          {numAlerts} alerts are active ont this market. Are you sure you want to remove them?
+        </DialogDescription>
+        <div className="flex gap-3 justify-end">
+          <Button variant={'outline'} onClick={() => onCancel()}>
+            Cancel
+          </Button>
+          <Button onClick={() => onConfirm()}>Confirm</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 type WatchlistIconProps = {
   market: Market
@@ -18,7 +59,8 @@ type WatchlistIconProps = {
 export function WatchlistIcon({ market, className }: WatchlistIconProps) {
   const { isWatched, remove, entries } = useWatchlist()
   const watched = isWatched(market.id)
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [ruleDialogOpen, setRuleDialogOpen] = useState(false)
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
 
   const watchlistEntry = entries.find((e) => e.marketId === market.id)
   const alerts = watchlistEntry?.alertRules ?? []
@@ -26,9 +68,9 @@ export function WatchlistIcon({ market, className }: WatchlistIconProps) {
 
   const toggle = () => {
     if (watched) {
-      remove(market.id)
+      setConfirmDialogOpen(true)
     } else {
-      setDialogOpen(true)
+      setRuleDialogOpen(true)
     }
   }
 
@@ -56,7 +98,16 @@ export function WatchlistIcon({ market, className }: WatchlistIconProps) {
           </span>
         )}
       </Button>
-      <AlertRuleDialog market={market} open={dialogOpen} onOpenChange={setDialogOpen} />
+      <AlertRuleDialog market={market} open={ruleDialogOpen} onOpenChange={setRuleDialogOpen} />
+      <ConfirmAlertRemovalDialog
+        numAlerts={numAlerts}
+        onConfirm={() => {
+          remove(market.id)
+          setConfirmDialogOpen(false)
+        }}
+        onCancel={() => setConfirmDialogOpen(false)}
+        open={confirmDialogOpen}
+      />
     </>
   )
 }

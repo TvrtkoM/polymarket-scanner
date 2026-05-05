@@ -4,11 +4,7 @@
 
 This project can be understood as a detailed presentation of the polymarkets active markets. Application fetches markets from polymarket's APIs and presents them with additional information such as trading signals that inform us when market's price moves significantly, there is high volume surge, market is near resolution etc. Signals are defined by rules in @lib/markets/rules.ts file.
 
-Goal is to add more functionality to the app to improve decision making before making trades. Next steps are to add following:
-
-### Market details
-
-- live feed of trades made on that market sorted from newest to oldest by default with additional filtering and sorting functionality
+Goal is to add more functionality to the app to improve decision making before making trades.
 
 ## Technology stack
 

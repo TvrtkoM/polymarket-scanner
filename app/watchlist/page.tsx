@@ -1,6 +1,6 @@
-'use client'
-
 import { WatchlistList } from '@/components/watchlist/watchlist-list'
+
+export const metadata = { title: 'Watchlist' }
 
 export default function WatchlistPage() {
   return (

@@ -1,7 +1,7 @@
-'use client'
-
 import { SettingsImportExport } from '@/components/settings-import-export'
 import { NotificationPermission } from '@/components/notification-permission'
+
+export const metadata = { title: 'Settings' }
 
 export default function SettingsPage() {
   return (

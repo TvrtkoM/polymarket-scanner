@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 
-export function useIsMounted() {
+export function useIsHydrated() {
   return useSyncExternalStore(
     () => () => {},
     () => true,

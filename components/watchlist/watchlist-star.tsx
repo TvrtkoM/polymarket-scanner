@@ -1,5 +1,6 @@
 'use client'
 
+import { useIsHydrated } from '@/lib/hooks'
 import type { Market } from '@/lib/markets/types'
 import { cn } from '@/lib/utils'
 import { useWatchlist } from '@/lib/watchlist/hooks'
@@ -8,7 +9,6 @@ import { useState } from 'react'
 import { AlertRuleDialog } from '../alerts/alert-rule-form'
 import { Button } from '../ui/button'
 import { Skeleton } from '../ui/skeleton'
-import { useIsMounted } from '@/lib/hooks'
 
 type WatchlistStarProps = {
   market: Market
@@ -36,9 +36,9 @@ export function WatchlistStar({ market, className }: WatchlistStarProps) {
     }
   }
 
-  const isMounted = useIsMounted()
+  const hydrated = useIsHydrated()
 
-  if (!isMounted) {
+  if (!hydrated) {
     return <Skeleton className="h-8 w-8" />
   }
 

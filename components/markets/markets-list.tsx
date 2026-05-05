@@ -1,7 +1,7 @@
 'use client'
 
 import { fetchMarkets } from '@/lib/client-api'
-import { useIsMounted } from '@/lib/hooks'
+import { useIsHydrated } from '@/lib/hooks'
 import { marketsSearchParsers } from '@/lib/markets/search-params'
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { useQueryStates } from 'nuqs'
@@ -20,7 +20,7 @@ export function MarketsList() {
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   })
 
-  const mounted = useIsMounted()
+  const hydrated = useIsHydrated()
 
   const markets = data.pages.flatMap((p) => p.markets)
 
@@ -28,7 +28,7 @@ export function MarketsList() {
     return <p className="text-muted-foreground text-sm">No markets found.</p>
   }
 
-  if (!mounted) {
+  if (!hydrated) {
     return (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {markets.map((market, i) => (

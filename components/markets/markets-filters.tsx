@@ -1,6 +1,6 @@
 'use client'
 
-import { useIsMounted } from '@/lib/hooks'
+import { useIsHydrated } from '@/lib/hooks'
 import { SORT_OPTIONS } from '@/lib/markets/constants'
 import { MarketsParams, marketsSearchParsers } from '@/lib/markets/search-params'
 import { MarketSortKey } from '@/lib/markets/types'
@@ -54,9 +54,9 @@ export function MarketsFilters() {
     setLiqNumMin(DEFAULT_LIQUIDITY)
   }
 
-  const isMounted = useIsMounted()
+  const hydrated = useIsHydrated()
 
-  if (!isMounted) {
+  if (!hydrated) {
     return <MarketsFiltersSkeleton />
   }
 

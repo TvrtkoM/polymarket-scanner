@@ -1,7 +1,7 @@
 'use client'
 
 import { fetchMarketsByIds } from '@/lib/client-api'
-import { useIsMounted } from '@/lib/hooks'
+import { useIsHydrated } from '@/lib/hooks'
 import { useWatchlist } from '@/lib/watchlist/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { AlertRuleList } from '../alerts/alert-rule-list'
@@ -21,9 +21,9 @@ export function WatchlistList() {
     staleTime: 25_000,
   })
 
-  const mounted = useIsMounted()
+  const hydrated = useIsHydrated()
 
-  if (entries.length === 0 && mounted) {
+  if (entries.length === 0 && hydrated) {
     return <p className="text-muted-foreground text-sm">No markets on your watchlist yet. Star a market to add it.</p>
   }
 

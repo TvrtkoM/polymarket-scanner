@@ -47,7 +47,7 @@ export function WatchlistIcon({ market, className }: WatchlistIconProps) {
         onClick={toggle}
         aria-label={watched ? 'Remove from watchlist' : 'Add to watchlist'}
         aria-pressed={watched}
-        className={cn('relative', watched && 'text-amber-500 hover:text-amber-600', className)}
+        className={cn('relative cursor-pointer', watched && 'text-red-700 hover:text-amber-600', className)}
       >
         <BellPlus className="size-4" />
         {numAlerts > 0 && (

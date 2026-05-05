@@ -4,6 +4,7 @@ import { getMarkets } from '@/lib/markets/get-markets'
 import { marketsSearchParamsCache } from '@/lib/markets/search-params'
 import { getQueryClient } from '@/lib/query-client'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
+import { Suspense } from 'react'
 
 export const metadata = { title: 'Markets' }
 
@@ -34,7 +35,9 @@ export default function MarketsPage({ searchParams }: { searchParams: MarketsSea
   return (
     <>
       <h1 className="mb-6 text-3xl font-bold tracking-tight">Markets</h1>
-      <MarketsFilters />
+      <Suspense>
+        <MarketsFilters />
+      </Suspense>
       <div className="mt-8">
         <Markets searchParams={searchParams} />
       </div>

@@ -70,9 +70,9 @@ export async function fetchMarketDisputes(questionId: string) {
  * @returns Array of {@link MarketWithSignals} for found ids.
  * @throws {@link ApiError} When the response status is not ok.
  */
-export async function fetchMarketsByIds(ids: string[]) {
+export async function fetchWatchedMarkets(ids: string[]) {
   if (ids.length === 0) return []
   const params = new URLSearchParams()
   ids.forEach((id) => params.append('id', id))
-  return apiFetch<MarketWithSignals[]>(`/api/markets/by-ids?${params}`)
+  return apiFetch<MarketWithSignals[]>(`/api/markets/watched?${params}`)
 }

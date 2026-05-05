@@ -98,23 +98,43 @@ export async function getMarket(slug: string): Promise<MarketWithSignals> {
  * @returns Array of normalised {@link MarketWithSignals} for found ids.
  * @throws {@link ApiError} When the Polymarket API responds with a non-2xx status.
  */
-export async function getMarketsByIds(ids: string[]): Promise<MarketWithSignals[]> {
+export async function getWatchedMarkets(ids: string[]): Promise<MarketWithSignals[]> {
   if (ids.length === 0) return []
 
   const params = new URLSearchParams({ limit: '1000' })
   ids.forEach((id) => params.append('id', id))
 
-  const res = await fetch(`${GAMMA_API_URL}/markets/keyset?${params}`, {
+  const resNotClosed = await fetch(`${GAMMA_API_URL}/markets/keyset?${params}`, {
     cache: 'no-store',
   })
 
-  if (!res.ok) {
-    throw new ApiError(`Polymarket API error`, res.status)
+  if (!resNotClosed.ok) {
+    throw new ApiError(`Polymarket API error`, resNotClosed.status)
   }
 
-  const raw: { markets: Record<string, unknown>[] } = await res.json()
+  let { markets }: { markets: Record<string, unknown>[] } = await resNotClosed.json()
 
-  return raw.markets
+  // Closed markets not fetched - need to send one more request
+  if (markets.length < ids.length) {
+    const paramsClosed = new URLSearchParams(params)
+    paramsClosed.append('closed', 'true')
+
+    const resClosed = await fetch(`${GAMMA_API_URL}/markets/keyset?${paramsClosed}`, {
+      cache: 'no-store',
+    })
+
+    if (!resClosed.ok) {
+      throw new ApiError(`Polymarket API error`, resNotClosed.status)
+    }
+
+    const { markets: closedMarkets }: { markets: Record<string, unknown>[] } = await resClosed.json()
+
+    console.log(closedMarkets, paramsClosed.toString(), params.toString())
+
+    markets = [...markets, ...closedMarkets]
+  }
+
+  return markets
     .map((m) => normaliseMarket(m))
     .filter((m) => m != null)
     .map((market) => ({ ...market, signals: runRules(market) }))

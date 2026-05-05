@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchMarketsByIds } from '@/lib/client-api'
+import { fetchWatchedMarkets } from '@/lib/client-api'
 import { useQuery } from '@tanstack/react-query'
 import { useAtom, useAtomValue } from 'jotai'
 import { useEffect } from 'react'
@@ -31,7 +31,7 @@ export function useAlertPoller() {
 
   const { data: markets } = useQuery({
     queryKey: ['watchlist-markets', sortedIds],
-    queryFn: () => fetchMarketsByIds(ids),
+    queryFn: () => fetchWatchedMarkets(ids),
     enabled: ids.length > 0,
     refetchInterval: 30_000,
     staleTime: 25_000,

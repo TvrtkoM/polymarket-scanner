@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchMarketsByIds } from '@/lib/client-api'
+import { fetchWatchedMarkets } from '@/lib/client-api'
 import { useIsHydrated } from '@/lib/hooks'
 import { useWatchlist } from '@/lib/watchlist/hooks'
 import { useQuery } from '@tanstack/react-query'
@@ -15,7 +15,7 @@ export function WatchlistList() {
 
   const { data: markets = [], isLoading } = useQuery({
     queryKey: ['watchlist-markets', sortedIds],
-    queryFn: () => fetchMarketsByIds(ids),
+    queryFn: () => fetchWatchedMarkets(ids),
     enabled: ids.length > 0,
     refetchInterval: 30_000,
     staleTime: 25_000,

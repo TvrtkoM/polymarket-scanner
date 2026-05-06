@@ -1,7 +1,7 @@
 import { MarketsFilters } from '@/components/markets/markets-filters'
 import { MarketsList } from '@/components/markets/markets-list'
 import { getMarkets } from '@/lib/markets/get-markets'
-import { marketsSearchParamsCache } from '@/lib/markets/search-params'
+import { marketsQueryKey, marketsSearchParamsCache } from '@/lib/markets/search-params'
 import { getQueryClient } from '@/lib/query-client'
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
 import { Suspense } from 'react'
@@ -16,16 +16,8 @@ async function Markets({ searchParams }: { searchParams: MarketsSearchParams }) 
   const queryClient = getQueryClient()
   const params = await marketsSearchParamsCache.parse(searchParams)
 
-  const queryKey = [
-    'markets',
-    params.order,
-    params.liquidity_num_min,
-    params.closed,
-    params.uma_resolution_status,
-  ] as const
-
   await queryClient.prefetchInfiniteQuery({
-    queryKey,
+    queryKey: marketsQueryKey(params),
     queryFn: () => getMarkets(params),
     initialPageParam: undefined,
   })

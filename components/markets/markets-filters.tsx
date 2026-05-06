@@ -31,8 +31,8 @@ function MarketsFiltersSkeleton() {
 
 export function MarketsFilters() {
   const [isPending, startTransition] = useTransition()
-  const [{ order, liquidity_num_min: liqNumMinQuery, closed, uma_resolution_status }, setParams] =
-    useQueryStates(marketsSearchParsers)
+  const [params, setParams] = useQueryStates(marketsSearchParsers)
+  const { order, liquidity_num_min: liqNumMinQuery, closed, uma_resolution_status } = params
 
   const [optimisticClosed, setOptimisticClosed] = useOptimistic(closed)
 

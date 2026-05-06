@@ -1,4 +1,5 @@
 import { formatCurrency } from '../utils'
+import { checkIsNearResolution, checkIsTossupMarket, checkPriceMove24h, checkVolumeSurge24h } from './conditions'
 import type { Market, Rule, Signal } from './types'
 
 /**
@@ -13,7 +14,7 @@ import type { Market, Rule, Signal } from './types'
  * change is below the threshold.
  */
 const significantPriceMove: Rule = (market) => {
-  if (Math.abs(market.oneDayPriceChange) >= 0.1) {
+  if (checkPriceMove24h(market).result) {
     return {
       marketId: market.id,
       ruleSlug: 'price_move_24h',
@@ -36,7 +37,7 @@ const significantPriceMove: Rule = (market) => {
  * below the threshold.
  */
 const highVolumeSurge: Rule = (market) => {
-  if (market.volume24h > 500_000) {
+  if (checkVolumeSurge24h(market).result) {
     return {
       marketId: market.id,
       ruleSlug: 'volume_24h',
@@ -60,15 +61,13 @@ const highVolumeSurge: Rule = (market) => {
  * no end date or resolves more than 7 days from now.
  */
 const nearResolution: Rule = (market) => {
-  if (!market.endDate) return null
-  const endDate = new Date(market.endDate)
-  const daysLeft = (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-  if (daysLeft <= 7 && daysLeft > 0) {
+  const checkResult = checkIsNearResolution(market)
+  if (checkResult.result) {
     return {
       marketId: market.id,
       ruleSlug: 'near_resolution',
-      description: `Resolves in ${daysLeft.toFixed(0)} day(s)`,
-      severity: daysLeft <= 2 ? 'high' : 'low',
+      description: `Resolves in ${checkResult.payload.toFixed(0)} day(s)`,
+      severity: checkResult.payload <= 2 ? 'high' : 'low',
     }
   }
   return null
@@ -87,14 +86,12 @@ const nearResolution: Rule = (market) => {
  * or its price is outside the 40–60% range.
  */
 const tossupMarket: Rule = (market) => {
-  const yesOutcome = market.outcomes.find((o) => o.label === 'Yes')
-  if (!yesOutcome) return null
-  const price = yesOutcome.price
-  if (price >= 0.4 && price <= 0.6) {
+  const checkRes = checkIsTossupMarket(market)
+  if (checkRes.result) {
     return {
       marketId: market.id,
       ruleSlug: 'tossup',
-      description: `Yes at ${(price * 100).toFixed(0)}% — too close to call`,
+      description: `${checkRes.payload.label} at ${(checkRes.payload.price * 100).toFixed(0)}% — too close to call`,
       severity: 'low',
     }
   }

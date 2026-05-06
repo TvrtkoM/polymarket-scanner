@@ -1,5 +1,11 @@
-import { formatCurrency, formatSignedPercent } from '../utils'
+import {
+  checkIsNearResolution,
+  checkOutcomePriceCrossed,
+  checkPriceMove24h,
+  checkVolumeSurge24h,
+} from '../markets/conditions'
 import type { Market } from '../markets/types'
+import { formatCurrency, formatSignedPercent } from '../utils'
 import type { AlertRule, AlertRuleState } from '../watchlist/types'
 
 type EvaluateResult = { fired: true; message: string } | { fired: false }
@@ -25,36 +31,37 @@ export function evaluateRule(rule: AlertRule, market: Market, state: AlertRuleSt
 
   switch (rule.ruleSlug) {
     case 'price_cross': {
-      const outcome = market.outcomes.find((o) => o.label === rule.outcomeLabel)
-      if (!outcome) return { fired: false }
-      const crossed = rule.direction === 'above' ? outcome.price >= rule.threshold : outcome.price <= rule.threshold
-      if (!crossed) return { fired: false }
-      return {
-        fired: true,
-        message: `${rule.outcomeLabel} price is ${(outcome.price * 100).toFixed(1)}% — ${rule.direction} ${(rule.threshold * 100).toFixed(0)}%`,
-      }
+      const checkResult = checkOutcomePriceCrossed(market, rule.outcomeLabel, rule.direction, rule.threshold)
+      return checkResult.result
+        ? {
+            fired: true,
+            message: `${rule.outcomeLabel} price is ${(checkResult.payload * 100).toFixed(1)}% — ${rule.direction} ${(rule.threshold * 100).toFixed(0)}%`,
+          }
+        : { fired: false }
     }
 
     case 'price_move_24h': {
-      if (Math.abs(market.oneDayPriceChange) < rule.absChange) return { fired: false }
-      return {
-        fired: true,
-        message: `24h price move: ${formatSignedPercent(market.oneDayPriceChange)} (threshold ≥ ${formatSignedPercent(rule.absChange)})`,
-      }
+      return checkPriceMove24h(market, rule.absChange).result
+        ? {
+            fired: true,
+            message: `24h price move: ${formatSignedPercent(market.oneDayPriceChange)} (threshold ≥ ${formatSignedPercent(rule.absChange)})`,
+          }
+        : { fired: false }
     }
 
     case 'volume_24h': {
-      if (market.volume24h <= rule.threshold) return { fired: false }
-      return {
-        fired: true,
-        message: `24h volume ${formatCurrency(market.volume24h)} exceeds ${formatCurrency(rule.threshold)}`,
-      }
+      return checkVolumeSurge24h(market, rule.threshold).result
+        ? {
+            fired: true,
+            message: `24h volume ${formatCurrency(market.volume24h)} exceeds ${formatCurrency(rule.threshold)}`,
+          }
+        : { fired: false }
     }
 
     case 'near_resolution': {
-      if (!market.endDate) return { fired: false }
-      const daysLeft = (new Date(market.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      if (daysLeft > rule.daysLeft || daysLeft <= 0) return { fired: false }
+      const checkResult = checkIsNearResolution(market, rule.daysLeft)
+      if (!checkResult.result) return { fired: false }
+      const daysLeft = checkResult.payload
       return {
         fired: true,
         message: `Resolves in ${daysLeft.toFixed(0)} day(s) (threshold ≤ ${rule.daysLeft})`,

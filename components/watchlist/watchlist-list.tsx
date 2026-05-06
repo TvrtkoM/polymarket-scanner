@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchWatchedMarkets } from '@/lib/client-api'
+import { fetchWatchedMarkets } from '@/lib/markets/client-api'
 import { useIsHydrated } from '@/lib/hooks'
 import { useWatchlist } from '@/lib/watchlist/hooks'
 import { useQuery } from '@tanstack/react-query'

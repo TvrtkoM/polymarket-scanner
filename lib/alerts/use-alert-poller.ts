@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchWatchedMarkets } from '@/lib/client-api'
+import { fetchWatchedMarkets } from '@/lib/markets/client-api'
 import { useQuery } from '@tanstack/react-query'
 import { useAtom, useAtomValue } from 'jotai'
 import { useEffect } from 'react'

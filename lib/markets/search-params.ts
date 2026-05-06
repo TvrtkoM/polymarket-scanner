@@ -28,10 +28,3 @@ export const marketsSearchParamsCache = createSearchParamsCache(marketsSearchPar
 
 /** For use in route handlers (no React cache context). */
 export const loadMarketsSearchParams = createLoader(marketsSearchParsers)
-
-/**
- * Builds the react-query key for the markets infinite query.
- * Keep all consumers (prefetch, list, cache invalidation) in sync by importing this.
- */
-export const marketsQueryKey = (params: MarketsParams) =>
-  ['markets', params.order, params.liquidity_num_min, params.uma_resolution_status, params.closed] as const

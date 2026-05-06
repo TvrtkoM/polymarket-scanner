@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchMarket, fetchMarketDisputes } from '@/lib/client-api'
+import { fetchMarket, fetchMarketDisputes } from '@/lib/markets/client-api'
 import type { MarketDisputes, MarketWithSignals } from '@/lib/markets/types'
 import { cn, formatCurrency, formatDate, formatPrice, formatSigned } from '@/lib/utils'
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query'

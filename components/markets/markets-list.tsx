@@ -1,8 +1,9 @@
 'use client'
 
-import { fetchMarkets } from '@/lib/client-api'
 import { useIsHydrated } from '@/lib/hooks'
-import { marketsQueryKey, marketsSearchParsers } from '@/lib/markets/search-params'
+import { fetchMarkets } from '@/lib/markets/client-api'
+import { marketsQueryKey } from '@/lib/markets/query'
+import { marketsSearchParsers } from '@/lib/markets/search-params'
 import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import isEqual from 'lodash/isEqual'
 import { useQueryStates } from 'nuqs'
@@ -28,7 +29,7 @@ export function MarketsList() {
   }, [queryKey, queryClient])
 
   const { data, fetchNextPage, hasNextPage, error, isFetchingNextPage } = useSuspenseInfiniteQuery({
-    queryKey: marketsQueryKey(params),
+    queryKey,
     queryFn: ({ pageParam }) => fetchMarkets(pageParam, params),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,

@@ -1,7 +1,7 @@
-import { ApiError } from './errors'
-import type { MarketDisputes, MarketWithSignals } from './markets/types'
-import type { MarketsParams } from './markets/search-params'
-import { toStringRecord } from './utils'
+import { ApiError } from '../errors'
+import type { MarketDisputes, MarketWithSignals } from './types'
+import type { MarketsParams } from './search-params'
+import { toStringRecord } from '../utils'
 
 /**
  * Fetches a JSON resource and returns it typed as `T`.

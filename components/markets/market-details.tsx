@@ -7,12 +7,13 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { TrendingDown, TrendingUp } from 'lucide-react'
 import Image from 'next/image'
 import { AlertRuleListSection } from '../alerts/alert-rule-list'
+import { ClientOnly } from '../client-only'
 import { PolymarketsLink } from '../ui/polymarkets-link'
 import { SectionHeading } from '../ui/section-heading'
 import { Skeleton } from '../ui/skeleton'
 import { WatchlistIcon } from '../watchlist/watchlist-icon'
-import { SignalBadges } from './signals'
 import { MarketStatuses } from './market-statuses'
+import { SignalBadges } from './signals'
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -233,7 +234,9 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         </div>
       )}
 
-      <AlertRuleListSection market={market} />
+      <ClientOnly>
+        <AlertRuleListSection market={market} />
+      </ClientOnly>
     </div>
   )
 }

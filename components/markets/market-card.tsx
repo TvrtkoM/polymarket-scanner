@@ -52,7 +52,7 @@ export function MarketCard({ market, imagePriority = false }: { market: MarketWi
         )}
 
         <h2 className="text-sm font-semibold leading-snug line-clamp-2 underline">
-          <Link href={`/markets/${market.slug}`} prefetch>
+          <Link href={`/market/${market.slug}`} prefetch>
             {market.question}
           </Link>
         </h2>

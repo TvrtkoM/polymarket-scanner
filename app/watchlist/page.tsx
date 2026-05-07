@@ -1,3 +1,5 @@
+import { ClientOnly } from '@/components/client-only'
+import { GridSkeleton } from '@/components/ui/grid-skeleton'
 import { WatchlistList } from '@/components/watchlist/watchlist-list'
 
 export const metadata = { title: 'Watchlist' }
@@ -6,7 +8,9 @@ export default function WatchlistPage() {
   return (
     <>
       <h1 className="mb-8 text-3xl font-bold tracking-tight">Watchlist</h1>
-      <WatchlistList />
+      <ClientOnly fallback={<GridSkeleton />}>
+        <WatchlistList />
+      </ClientOnly>
     </>
   )
 }

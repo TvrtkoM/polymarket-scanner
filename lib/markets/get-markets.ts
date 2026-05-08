@@ -5,7 +5,7 @@ import { DATA_API_URL, GAMMA_API_URL, marketsPageCount } from './constants'
 import { normaliseMarket } from './normalise'
 import { runRules } from './rules'
 import type { MarketsParams } from './search-params'
-import type { MarketDisputes, MarketWithSignals } from './types'
+import type { HoldersPage, MarketDisputes, MarketWithSignals } from './types'
 
 /**
  * Fetches a paginated list of active, tradeable markets from the Polymarket API,
@@ -137,8 +137,6 @@ export async function getWatchedMarkets(ids: string[]): Promise<MarketWithSignal
 
     const { markets: closedMarkets }: { markets: Record<string, unknown>[] } = await resClosed.json()
 
-    console.log(closedMarkets, paramsClosed.toString(), params.toString())
-
     markets = [...markets, ...closedMarkets]
   }
 
@@ -155,6 +153,30 @@ export async function getWatchedMarkets(ids: string[]): Promise<MarketWithSignal
  * @returns The {@link MarketDisputes} data for the market.
  * @throws {@link ApiError} When the data API responds with a non-2xx status.
  */
+/**
+ * Fetches a paginated page of top holders for a market from the Polymarket data API.
+ * The response groups holders by outcome token; pagination uses `offset`/`limit` and
+ * the `limit` applies per outcome group.
+ *
+ * @param conditionId - The market's `conditionId` used as the `market` query parameter.
+ * @param limit - Maximum holders to return per outcome group.
+ * @param offset - Offset into the holders list, used for pagination.
+ * @returns A {@link HoldersPage} with one entry per outcome token.
+ * @throws {@link ApiError} When the data API responds with a non-2xx status.
+ */
+export async function getMarketHolders(conditionId: string, limit: number, offset: number): Promise<HoldersPage> {
+  const params = new URLSearchParams({
+    market: conditionId,
+    limit: limit.toString(),
+    offset: offset.toString(),
+  })
+  const res = await fetch(`${DATA_API_URL}/holders?${params}`, {
+    next: { revalidate: 30 },
+  })
+  if (!res.ok) throw new ApiError(`Holders API error`, res.status)
+  return (await res.json()) as HoldersPage
+}
+
 export async function getMarketDisputes(questionId: string): Promise<MarketDisputes> {
   const res = await fetch(`${DATA_API_URL}/subgraph/resolution/${questionId}`)
   if (!res.ok) throw new ApiError(`Dispute resolution API error`, res.status)

@@ -1,5 +1,5 @@
 import { ApiError } from '../errors'
-import type { MarketDisputes, MarketWithSignals } from './types'
+import type { HoldersPage, MarketDisputes, MarketWithSignals } from './types'
 import type { MarketsParams } from './search-params'
 import { toStringRecord } from '../utils'
 
@@ -60,6 +60,19 @@ export async function fetchMarket(slug: string) {
  */
 export async function fetchMarketDisputes(questionId: string) {
   return apiFetch<MarketDisputes>(`/api/market/disputes/${questionId}`)
+}
+
+/**
+ * Fetches a paginated page of top holders for a market by its `conditionId`.
+ *
+ * @param conditionId - The market's Polymarket condition id.
+ * @param limit - Maximum holders per outcome group.
+ * @param offset - Offset into the holders list.
+ * @returns A {@link HoldersPage} grouping holders by outcome token.
+ * @throws {@link ApiError} When the response status is not ok.
+ */
+export async function fetchMarketHolders(conditionId: string, limit: number, offset: number) {
+  return apiFetch<HoldersPage>(`/api/market/holders/${conditionId}?limit=${limit}&offset=${offset}`)
 }
 
 /**

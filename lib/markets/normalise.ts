@@ -53,5 +53,6 @@ export function normaliseMarket(raw: Record<string, unknown>): Market | null {
     disputed: (raw.umaResolutionStatuses as string[] | undefined)?.includes('disputed') ?? false,
     questionId: (raw.questionID as string) ?? null,
     resolutionStatus: (raw.umaResolutionStatus as ResolutionStatus | undefined) ?? null,
+    conditionId: (raw.conditionId as string) ?? null,
   }
 }

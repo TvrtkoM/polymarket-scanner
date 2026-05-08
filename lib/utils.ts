@@ -17,6 +17,16 @@ export function formatCurrency(amount: number, decimals = 0) {
 }
 
 /**
+ * Formats a number with thousands separators, rounded to the nearest integer.
+ *
+ * @param n - The number to format.
+ * @returns A string such as `"63,161"`.
+ */
+export function formatNumber(n: number) {
+  return new Intl.NumberFormat('en-US').format(Math.round(n))
+}
+
+/**
  * Formats a decimal fraction as a signed percentage string.
  *
  * @param fraction - A value in [−1, 1] representing the change (e.g. `0.05` for 5%).

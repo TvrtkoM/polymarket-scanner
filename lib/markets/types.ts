@@ -71,7 +71,28 @@ export type Market = {
   questionId: string | null
   /** Resolution status - `disputed`, `resolved` or `null` if none */
   resolutionStatus: ResolutionStatus | null
+  /** Polymarket condition id used to query the holders data API; `null` if not provided by the upstream API. */
+  conditionId: string | null
 }
+
+/** A single holder of an outcome token, returned by the Polymarket data API `/holders` endpoint. */
+export type Holder = {
+  /** Holder's proxy wallet address. */
+  proxyWallet: string
+  /** Display name set by the holder, possibly empty. */
+  name: string
+  /** Auto-generated pseudonym, used as a fallback when `name` is empty. */
+  pseudonym: string
+  /** URL of the holder's profile image, or empty string if none. */
+  profileImage: string
+  /** Number of outcome shares held. */
+  amount: number
+  /** Index into {@link Market.outcomes} indicating which side the holder is on. */
+  outcomeIndex: number
+}
+
+/** A single page of the Polymarket holders endpoint, grouped by outcome token. */
+export type HoldersPage = { token: string; holders: Holder[] }[]
 
 /** Mixin that attaches rule-engine signals to any type. */
 export type WithSignals = {

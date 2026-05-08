@@ -14,6 +14,7 @@ import { Skeleton } from '../ui/skeleton'
 import { WatchlistIcon } from '../watchlist/watchlist-icon'
 import { MarketStatuses } from './market-statuses'
 import { SignalBadges } from './signals'
+import { TopHoldersButton } from './top-holders/top-holders-button'
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -112,7 +113,8 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
           <div className="self-start mt-1">
             <MarketStatuses market={market} />
           </div>
-          <div className="flex items-center gap-1 self-start">
+          <div className="flex items-center gap-2 self-start">
+            <TopHoldersButton market={market} />
             <WatchlistIcon market={market} />
             <PolymarketsLink slug={market.slug} />
           </div>

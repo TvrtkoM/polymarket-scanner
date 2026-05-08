@@ -4,13 +4,13 @@ import { useIsHydrated } from '@/lib/hooks'
 import type { Market } from '@/lib/markets/types'
 import { cn } from '@/lib/utils'
 import { useWatchlist } from '@/lib/watchlist/hooks'
-import { BellPlus } from 'lucide-react'
+import { Bookmark } from 'lucide-react'
 import { useState } from 'react'
 import { AlertRuleDialog } from '../alerts/alert-rule-form'
 import { Button } from '../ui/button'
-import { Skeleton } from '../ui/skeleton'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
 import { sectionHeadingClassName } from '../ui/section-heading'
+import { Skeleton } from '../ui/skeleton'
 
 function ConfirmAlertRemovalDialog({
   open,
@@ -91,7 +91,7 @@ export function WatchlistIcon({ market, className }: WatchlistIconProps) {
         aria-pressed={watched}
         className={cn('relative cursor-pointer', watched && 'text-red-700 hover:text-amber-600', className)}
       >
-        <BellPlus className="size-4" />
+        <Bookmark className="size-4" />
         {numAlerts > 0 && (
           <span className="absolute -top-0.5 -left-0.5 flex size-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white leading-none">
             {numAlerts > 9 ? '9+' : numAlerts}

@@ -5,11 +5,13 @@ import { formatCurrency, formatDate, formatSignedPercent } from '@/lib/utils'
 import Decimal from 'decimal.js'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ClientOnly } from '../client-only'
 import { HorizontalScroller } from '../ui/horizontal-scroller'
 import { PolymarketsLink } from '../ui/polymarkets-link'
+import { Skeleton } from '../ui/skeleton'
 import { WatchlistIcon } from '../watchlist/watchlist-icon'
-import { SignalBadges } from './signals'
 import { MarketStatuses } from './market-statuses'
+import { SignalBadges } from './signals'
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
@@ -69,7 +71,11 @@ export function MarketCard({ market, imagePriority = false }: { market: MarketWi
         <div className="flex items-baseline flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <StatItem label="Vol 24h" value={formatCurrency(market.volume24h)} />
           <StatItem label="Liq" value={formatCurrency(market.liquidity)} />
-          {market.endDate && <StatItem label="End Date" value={formatDate(market.endDate)} />}
+          {market.endDate && (
+            <ClientOnly fallback={<Skeleton className="inline w-52 h-4" />}>
+              <StatItem label="End Date" value={formatDate(market.endDate)} />
+            </ClientOnly>
+          )}
         </div>
 
         <div className="flex items-center gap-2 pt-1">

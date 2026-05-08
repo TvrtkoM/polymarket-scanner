@@ -125,7 +125,11 @@ function MarketDetailsView({ market }: { market: MarketWithSignals }) {
         <Stat label="24h Volume" value={formatCurrency(market.volume24h)} />
         <Stat label="7d Volume" value={formatCurrency(market.volume1wk)} />
         <Stat label="Liquidity" value={formatCurrency(market.liquidity)} />
-        <Stat label="End Date" value={market.endDate ? formatDate(market.endDate) : '-'} />
+        {market.endDate && (
+          <ClientOnly>
+            <Stat label="End Date" value={formatDate(market.endDate)} />
+          </ClientOnly>
+        )}
       </section>
 
       <section>

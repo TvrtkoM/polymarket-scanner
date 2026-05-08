@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Polymarket Scanner',
+  title: { template: '%s | Polymarket Scanner', default: 'Polymarket Scanner' },
   description:
     'Active Polymarket prediction markets alongside computed trading signals to help inform trading decisions.',
 }

@@ -18,6 +18,8 @@ The app fetches active markets from Polymarket's APIs and presents them with add
 
 ## How to run it
 
+Application is live [here](https://polymarket-scanner-inky.vercel.app/).
+
 Requires Node.js 20+.
 
 ```bash

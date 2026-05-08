@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Polymarket Scanner
 
-## Getting Started
+A Next.js application that surfaces active [Polymarket](https://polymarket.com) prediction markets alongside computed trading signals to help inform trading decisions.
 
-First, run the development server:
+## What it does
+
+The app fetches active markets from Polymarket's APIs and presents them with additional analysis layered on top:
+
+- **Trading signals** — Each market is evaluated against a set of rules in [lib/markets/rules.ts](lib/markets/rules.ts):
+  - **Significant price move** — fires when 24h price change is ≥ 10% (high severity at ≥ 20%)
+  - **High volume surge** — fires when 24h volume exceeds $500k (high severity above $1M)
+  - **Near resolution** — fires when a market resolves within 7 days (high severity within 2 days)
+  - **Tossup** — fires when the "Yes" outcome sits between 40–60%
+- **Market detail view** — drill into a single market to see top holders and order book context
+- **Watchlist** — pin markets you want to follow, persisted locally
+- **Alerts** — client-side polling evaluates rules against watched markets and dispatches browser notifications
+- **Settings** — import/export your local state (watchlist, alert preferences)
+
+## How to run it
+
+Requires Node.js 20+.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The dev server starts on `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build      # production build
+npm run start      # run the production build
+npm run lint       # eslint
+npm run prettier   # format the codebase
+```
 
-## Learn More
+## What it contains
 
-To learn more about Next.js, take a look at the following resources:
+- [app/](app/) — Next.js routes and route handlers
+- [components/](components/) — React components
+- [lib/](lib/) — utilities, types, domain logic
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Libraries and tools
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Framework**
 
-## Deploy on Vercel
+- [Next.js 16](https://nextjs.org) (App Router) with React 19
+- TypeScript (strict)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Data**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [TanStack Query](https://tanstack.com/query) — client-side fetching and caching
+- [TanStack Virtual](https://tanstack.com/virtual) — virtualised long lists
+- [decimal.js](https://mikemcl.github.io/decimal.js/) — precise numeric handling
+- [nuqs](https://nuqs.47ng.com/) — URL-synced search params
+
+**State**
+
+- [Jotai](https://jotai.org) — atomic state management
+
+**UI**
+
+- [shadcn/ui](https://ui.shadcn.com) on top of [Radix UI](https://www.radix-ui.com)
+- [Tailwind CSS 4](https://tailwindcss.com)
+- [lucide-react](https://lucide.dev) — icon set
+- [sonner](https://sonner.emilkowal.ski) — toasts
+- [boring-avatars](https://boringavatars.com) — generated avatars
+
+**Utilities**
+
+- [@mantine/hooks](https://mantine.dev/hooks/) — common React hooks
+- [lodash](https://lodash.com)
+
+**Tooling**
+
+- ESLint, Prettier

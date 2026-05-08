@@ -35,7 +35,7 @@ export function Header() {
               )}
             >
               <div>{label}</div>
-              {href === '/watchlist' && hydrated && entries.length > 0 && (
+              {href === '/watchlist' && entries.length > 0 && (
                 <div className="size-5 rounded-full bg-amber-500 text-white flex items-center justify-center">
                   {entries.length}
                 </div>
